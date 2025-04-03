@@ -9,7 +9,7 @@ import com.example.ex6.service.PaysService;
 import com.example.ex6.service.SkieurService;
 
 import java.util.ArrayList;
-
+//nigga
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
