@@ -9,25 +9,37 @@ public class Cat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PK_Cat")
+    @Column(name = "pk_cat")
     private Integer id;
-    
-    @Column(name = "Name", length = 50)
+
+    @Column(name = "name", length = 50)
     private String nom;
-    
-    @Column(name = "Birthdate")
+
+    @Column(name = "birthdate")
     @Temporal(TemporalType.DATE)
     private Date birthdate;
 
     @ManyToOne
-    @JoinColumn(name = "FK_Breed", referencedColumnName = "PK_Breed")
+    @JoinColumn(name = "fk_buyer", referencedColumnName = "pk_buyer") // Assuming Buyer entity exists and pk_buyer is the primary key of Buyer
+    private Buyer buyer;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_breed", referencedColumnName = "fk_breed")
     private Breed breed;
 
-    @Column(name = "FunFact", length = 255)
+    @Column(name = "funFact", length = 255)
     private String funFact;
 
-    @Column(name = "Description", length = 500)
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "image")
+    private byte[] image; // Or use byte[] if storing the actual image data
+
+    @Column(name = "isPurchased")
+    private Boolean isPurchased; // Flag to track if the cat is purchased
+
+    // Getters and Setters
 
     public Integer getId() {
         return id;
@@ -53,6 +65,14 @@ public class Cat {
         this.birthdate = birthdate;
     }
 
+    public Buyer getBuyer() {
+        return buyer;
+    }
+
+    public void setBuyer(Buyer buyer) {
+        this.buyer = buyer;
+    }
+
     public Breed getBreed() {
         return breed;
     }
@@ -75,5 +95,21 @@ public class Cat {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public Boolean getIsPurchased() {
+        return isPurchased;
+    }
+
+    public void setIsPurchased(Boolean isPurchased) {
+        this.isPurchased = isPurchased;
     }
 }

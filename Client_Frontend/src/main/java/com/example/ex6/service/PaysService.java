@@ -4,16 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.ex6.model.Pays;
-import com.example.ex6.repository.PaysRepository;
+import com.example.ex6.repository.BreedRepository;
 
 import jakarta.transaction.Transactional;
 
 @Service
 public class PaysService {
-    private final PaysRepository paysRepository;
+    private final BreedRepository paysRepository;
 
     @Autowired
-    public PaysService(PaysRepository paysRepository) {
+    public PaysService(BreedRepository paysRepository) {
         this.paysRepository = paysRepository;
     }
 
