@@ -1,5 +1,5 @@
 package com.example.ex6.service;
-import com.example.ex6.dto.SkieurDTO;
+import com.example.ex6.dto.CatDTO;
 import com.example.ex6.model.Pays;
 import com.example.ex6.model.Skieur;
 import com.example.ex6.repository.PaysRepository;
@@ -26,11 +26,11 @@ public class SkieurService {
         this.paysRepository = paysRepository;
     }
 
-    public Iterable<SkieurDTO> findAllSkieurs() {
+    public Iterable<CatDTO> findAllSkieurs() {
         Iterable<Skieur> skieurs = skieurRepository.findAll();
-        List<SkieurDTO> skieurDTOs = new ArrayList<>();
+        List<CatDTO> skieurDTOs = new ArrayList<>();
         for (Skieur skieur : skieurs) {
-            SkieurDTO skieurDTO = new SkieurDTO(
+            CatDTO skieurDTO = new CatDTO(
                     skieur.getId(),
                     skieur.getName(),
                     skieur.getPosition(),
