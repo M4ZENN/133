@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.ex6.dto.UserDTO;
@@ -42,10 +43,22 @@ public class UserService {
     }
 
     // Authentication method
-    public Optional<User> login(String email, String password) {
+    @SuppressWarnings("rawtypes")
+    public ResponseEntity login(String email, String password) {
         Optional<User> user = userRepository.findByEmail(email);
-    
+        User u = user.get();
+        UserDTO userDTO = new UserDTO(
+            u.getId(),
+            u.getFirstName(),
+            u.getLastName(),
+            u.getBirthDate(),
+            u.getEmail(),
+            u.getPhoneNumber(),
+            u.isAdmin()
+        );
+
         if (user.isPresent()) {
+
             System.out.println("User found: " + user.get().getEmail());
             System.out.println("Stored Password: " + user.get().getPassword());  // This is the hashed password
             System.out.println("Entered Password: " + password);  // This is the plain text password
@@ -54,7 +67,8 @@ public class UserService {
             if (hashPassword(password).equals(user.get().getPassword())) {
 
                 System.out.println("Passwords match! Returning user.");
-                return user;
+
+                return ResponseEntity.ok(userDTO);
             } else {
                 System.out.println("Passwords do NOT match!");
                 System.out.println("Entered Hashed Password : " + hashPassword(password)); 
@@ -63,7 +77,7 @@ public class UserService {
         System.out.println("No user found with this email.");
         }
 
-        return Optional.empty();
+        return (ResponseEntity) ResponseEntity.notFound();
     }
 
     public static String hashPassword(String password) {

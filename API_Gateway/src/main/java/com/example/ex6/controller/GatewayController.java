@@ -41,7 +41,8 @@ public class GatewayController {
 
     // Login - forward login data to RESTAPP
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password, HttpSession session) {
+    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password,
+            HttpSession session) {
         String url = "http://localhost:8081/user/login";
         String requestBody = "email=" + email + "&password=" + password;
 
@@ -51,7 +52,7 @@ public class GatewayController {
         // If the login is successful, manage session data
         if (response.getStatusCode() == HttpStatus.OK) {
             session.setAttribute("email", email);
-            session.setAttribute("isAdmin", "User Admin");  // Dynamically set this from the response if needed
+            session.setAttribute("isAdmin", "User Admin"); // Dynamically set this from the response if needed
             return ResponseEntity.ok(response.getBody());
         } else {
             return ResponseEntity.badRequest().body("Invalid credentials or server error.");
@@ -61,15 +62,30 @@ public class GatewayController {
     // Logout - invalidate session
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpSession session) {
-        session.invalidate();  // Destroy session
+        session.invalidate(); // Destroy session
         return ResponseEntity.ok("Session destroyed, user logged out!");
     }
 
     // Add a new cat - forward to the Cat Service
-    @PostMapping("/catAdd")
-    public ResponseEntity<String> addCat(@RequestParam String name, @RequestParam String breed, @RequestParam int age) {
-        String url = "http://localhost:8082/addCat";  // Replace with the actual URL of the cat API
-        String requestBody = "name=" + name + "&breed=" + breed + "&age=" + age;
+    @PostMapping("/addCat")
+    public ResponseEntity<String> addCat(@RequestParam String name,
+            @RequestParam String birthdate,
+            @RequestParam Integer buyerId,
+            @RequestParam Integer breedId,
+            @RequestParam String funFact,
+            @RequestParam String description,
+            @RequestParam(required = false) Boolean isPurchased) {
+        String url = "http://localhost:8082/addCat"; // Replace with the actual URL of the cat API
+
+        // Constructing the request body based on new parameters
+        String requestBody = "name=" + name + "&birthdate=" + birthdate +
+                "&buyerId=" + buyerId + "&breedId=" + breedId +
+                "&funFact=" + funFact + "&description=" + description;
+
+        // Optionally add isPurchased to the request body if it's provided
+        if (isPurchased != null) {
+            requestBody += "&isPurchased=" + isPurchased;
+        }
 
         // Forward the request to the Cat Service
         ResponseEntity<String> response = forwardRequest(url, HttpMethod.POST, requestBody);
@@ -84,7 +100,7 @@ public class GatewayController {
     // Buy a cat - forward to the Cat Service
     @PostMapping("/cat/buy")
     public ResponseEntity<String> buyCat(@RequestParam String name) {
-        String url = "http://localhost:8082/buyCat";  // Replace with actual Cat Buy URL
+        String url = "http://localhost:8082/buyCat"; // Replace with actual Cat Buy URL
         String requestBody = "name=" + name;
 
         // Forward the request to the Cat Service
