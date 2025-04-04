@@ -3,7 +3,6 @@ package com.example.ex6.controller;
 import com.example.ex6.model.Cat;
 import com.example.ex6.service.CatService;
 
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

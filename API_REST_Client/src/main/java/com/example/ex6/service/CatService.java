@@ -1,6 +1,5 @@
 package com.example.ex6.service;
 
-import com.example.ex6.dto.CatDTO;
 import com.example.ex6.model.Breed;
 import com.example.ex6.model.Cat;
 import com.example.ex6.repository.CatRepository;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Optional;
 
