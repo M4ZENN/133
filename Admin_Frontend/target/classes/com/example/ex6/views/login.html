@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purrfect Haven - Connexion</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f9f4ef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4b8a5' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .login-container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 8px 24px rgba(149, 157, 165, 0.2);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .logo {
+            margin-bottom: 30px;
+        }
+
+        .cat-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #f5aa7a;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #5e4b56;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #5e4b56;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #eae0d5;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #f5aa7a;
+        }
+
+        button {
+            background-color: #f5aa7a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #e89b68;
+        }
+
+        .paw-prints {
+            position: absolute;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .paw1 {
+            top: 10%;
+            left: 10%;
+            transform: rotate(45deg);
+        }
+
+        .paw2 {
+            bottom: 15%;
+            right: 8%;
+            transform: rotate(-15deg);
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Motifs de pattes en arrière-plan -->
+    <div class="paw-prints paw1">
+        <svg width="100" height="100" viewBox="0 0 100 100" fill="#5e4b56">
+            <path d="M25,35 A15,15,0,1,1,45,35 A15,15,0,1,1,25,35 M55,35 A15,15,0,1,1,75,35 A15,15,0,1,1,55,35 M25,65 A15,15,0,1,1,45,65 A15,15,0,1,1,25,65 M55,65 A15,15,0,1,1,75,65 A15,15,0,1,1,55,65 M40,50 A20,20,0,1,1,60,50 A20,20,0,1,1,40,50"></path>
+        </svg>
+    </div>
+    <div class="paw-prints paw2">
+        <svg width="100" height="100" viewBox="0 0 100 100" fill="#5e4b56">
+            <path d="M25,35 A15,15,0,1,1,45,35 A15,15,0,1,1,25,35 M55,35 A15,15,0,1,1,75,35 A15,15,0,1,1,55,35 M25,65 A15,15,0,1,1,45,65 A15,15,0,1,1,25,65 M55,65 A15,15,0,1,1,75,65 A15,15,0,1,1,55,65 M40,50 A20,20,0,1,1,60,50 A20,20,0,1,1,40,50"></path>
+        </svg>
+    </div>
+
+    <div class="login-container">
+        <div class="logo">
+            <div class="cat-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12,19 C7.5,19 4,15.5 4,11 L4,9 L2,7 L4.5,4 L7,6 L9,6 L12,3 L15,6 L17,6 L19.5,4 L22,7 L20,9 L20,11 C20,15.5 16.5,19 12,19 Z"></path>
+                    <path d="M9,13 A0.5,0.5,0,1,1,9,14, A0.5,0.5,0,1,1,9,13"></path>
+                    <path d="M15,13 A0.5,0.5,0,1,1,15,14, A0.5,0.5,0,1,1,15,13"></path>
+                    <path d="M12,16 L12,17"></path>
+                    <path d="M8,16.5 Q12,19 16,16.5"></path>
+                </svg>
+            </div>
+            <h1>Purrfect Haven</h1>
+        </div>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required placeholder="votre@email.com">
+            </div>
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" required placeholder="••••••••">
+            </div>
+            <button type="submit">Se connecter</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Normalement, vous enverriez ces informations à votre backend
+            console.log('Email:', email);
+            console.log('Password:', password);
+            
+            // Redirection vers la page principale (à remplacer par votre URL)
+            window.location.href = 'home.html';
+        });
+    </script>
+</body>
+</html>
