@@ -17,72 +17,90 @@ class IndexCtrl {
     }
 
     connectSuccess(data) {
-        console.log("connectSuccess called", data);
-        
-        if (data.success) {
-            localStorage.setItem("user", JSON.stringify(data));
-            this.displayUser(data);
-
-            Toastify({
-                text: "Login successful",
-                duration: 3000,
-                gravity: "top",
-                position: "right",
-                backgroundColor: "#33cc33"
-            }).showToast();
+        try {
+            // Parse response if it's a string
+            const responseData = typeof data === 'string' ? JSON.parse(data) : data;
+            
+            if (responseData && responseData.id) {
+                // Store user details including ID
+                const user = {
+                    id: responseData.id,
+                    name: responseData.name || responseData.email || "Admin",
+                    email: responseData.email,
+                    isAdmin: responseData.isAdmin || true
+                };
+                
+                this.user = user;
+                localStorage.setItem("user", JSON.stringify(user));
+                
+                // Show success message
+                Toastify({
+                    text: "Connexion réussie",
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "#33cc33"
+                }).showToast();
+                
+                // Redirect to cat view page
+                window.location.href = "view.html";
+            } else {
+                throw new Error("Invalid response format");
+            }
+        } catch (error) {
+            console.error("Error processing login response:", error);
+            this.callbackError(null, "error", "Format de réponse invalide");
         }
     }
 
     disconnectSuccess() {
+        // Clear user data
+        this.user = null;
         localStorage.removeItem("user");
+        
+        // Show logout message
         Toastify({
-            text: "User disconnected",
+            text: "Déconnexion réussie",
             duration: 3000,
             gravity: "top",
             position: "right",
             backgroundColor: "#33cc33"
         }).showToast();
-        window.location.href = "./login.html";
+        
+        // Redirect to login page
+        window.location.href = "login.html";
     }
 
-    displayUser(user) {
-        $("#user-greeting").text(`Bienvenue, ${user.name}`);
-        $("#login-section").hide();
-        $("#dashboard-section").show();
+    loadCats() {
+        // Show loading indicator
+        const catsContainer = document.getElementById("cats-list");
+        if (catsContainer) {
+            catsContainer.innerHTML = '<div class="loading">Chargement des chats...</div>';
+        }
+        
+        // Fetch cats from API
+        this.http.getCats(this.getCatsSuccess, this.callbackError);
     }
 
     getCatsSuccess(data) {
-        console.log("getCatsSuccess called", data);
-        
-        if (data.cats && data.cats.length > 0) {
-            const cat = data.cats[0]; // On prend le premier chat pour remplir les champs
+        try {
+            // Parse response if it's a string
+            const responseData = typeof data === 'string' ? JSON.parse(data) : data;
             
-            $("#catName").val(cat.name);
-            $("#catBirthdate").val(cat.birthdate);
-            $("#catFunFact").val(cat.funFact);
-            $("#catDescription").val(cat.description);
+            // Display cats in the container
+            this.displayCats(responseData.cats || responseData);
             
-            if (cat.image) {
-                $("#catImage").attr("src", `data:image/jpeg;base64,${cat.image}`);
-            }
-            
-            $("#catIsPurchased").prop("checked", cat.isPurchased);
-            
-            // Charger les races dans la liste déroulante
-            const breedSelect = $("#catBreed");
-            breedSelect.empty();
-            data.breeds.forEach(breed => {
-                breedSelect.append(new Option(breed.name, breed.pk_breed));
-            });
-            breedSelect.val(cat.fk_breed);
-            
+            // Show success message
             Toastify({
-                text: "Cat details loaded successfully",
-                duration: 3000,
+                text: "Liste des chats chargée",
+                duration: 2000,
                 gravity: "top",
                 position: "right",
                 backgroundColor: "#33cc33"
             }).showToast();
+        } catch (error) {
+            console.error("Error processing cats data:", error);
+            this.callbackError(null, "error", "Erreur lors du chargement des chats");
         }
     }
 
@@ -95,33 +113,180 @@ class IndexCtrl {
             backgroundColor: "#ff3333"
         }).showToast();
     }
+
+    displayCats(cats) {
+        const catsContainer = document.getElementById("cats-list");
+        if (!catsContainer) return;
+        
+        if (!cats || cats.length === 0) {
+            catsContainer.innerHTML = `
+                <div class="no-cats">
+                    <p>Aucun chat n'est disponible actuellement.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        catsContainer.innerHTML = '';
+        
+        cats.forEach(cat => {
+            const catCard = document.createElement('div');
+            catCard.className = 'cat-card';
+            catCard.innerHTML = `
+                <div class="cat-header">${cat.name}</div>
+                <img src="${cat.image || "/api/placeholder/400/300"}" alt="${cat.name}" class="cat-image">
+                <div class="cat-info">
+                    <div class="info-field">
+                        <label>Âge:</label>
+                        <p>${cat.age || cat.birthdate}</p>
+                    </div>
+                    <div class="info-field">
+                        <label>Race:</label>
+                        <p>${cat.breed}</p>
+                    </div>
+                    <div class="info-field">
+                        <label>Anecdote:</label>
+                        <p>${cat.funFact || "N/A"}</p>
+                    </div>
+                    <div class="info-field">
+                        <label>Description:</label>
+                        <p>${cat.description || "Aucune description disponible"}</p>
+                    </div>
+                </div>
+                <div class="cat-actions">
+                    <button class="btn btn-secondary modify-cat" data-id="${cat.id}">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        Modifier
+                    </button>
+                    <button class="btn btn-danger delete-cat" data-id="${cat.id}">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                        </svg>
+                        Supprimer
+                    </button>
+                </div>
+            `;
+            
+            catsContainer.appendChild(catCard);
+        });
+        
+        // Add event listeners to the modify and delete buttons
+        document.querySelectorAll('.modify-cat').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const catId = e.currentTarget.getAttribute('data-id');
+                window.location.href = `edit-cat.html?id=${catId}`;
+            });
+        });
+        
+        document.querySelectorAll('.delete-cat').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const catId = e.currentTarget.getAttribute('data-id');
+                if (confirm('Êtes-vous sûr de vouloir supprimer ce chat ?')) {
+                    this.http.deleteCat(catId, this.deleteCatSuccess, this.callbackError);
+                }
+            });
+        });
+    }
+
+    addCatSuccess(data) {
+        Toastify({
+            text: "Chat ajouté avec succès",
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "#33cc33"
+        }).showToast();
+        
+        // Redirect to cat view page
+        setTimeout(() => {
+            window.location.href = "view.html";
+        }, 1500);
+    }
+
+    updateCatSuccess(data) {
+        Toastify({
+            text: "Chat modifié avec succès",
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "#33cc33"
+        }).showToast();
+        
+        // Redirect to cat view page
+        setTimeout(() => {
+            window.location.href = "view.html";
+        }, 1500);
+    }
+
+    deleteCatSuccess(data) {
+        Toastify({
+            text: "Chat supprimé avec succès",
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "#33cc33"
+        }).showToast();
+        
+        // Reload cats list
+        this.loadCats();
+    }
 }
 
-$(document).ready(function () {
-    window.ctrl = new IndexCtrl();
+// Initialize the application when the DOM is ready
+$(document).ready(function() {
+    // Create global controller instance
+    window.adminCtrl = new AdminController();
     
-    $("#loginForm").on("submit", function (event) {
+    // Handle login form submission
+    $("#login-form").on("submit", function(event) {
         event.preventDefault();
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        console.log("Form submitted", { email, password });
-        window.ctrl.http.connect(email, password, window.ctrl.connectSuccess, window.ctrl.callbackError);
+        const email = $("#email").val();
+        const password = $("#password").val();
+        
+        console.log("Login attempt for:", email);
+        window.adminCtrl.http.connect(email, password, window.adminCtrl.connectSuccess, window.adminCtrl.callbackError);
     });
     
-    $("#logout-btn").on("click", function () {
-        window.ctrl.disconnectSuccess();
+    // Handle logout button click
+    $("#logout-btn").on("click", function() {
+        window.adminCtrl.http.disconnect(window.adminCtrl.disconnectSuccess, window.adminCtrl.callbackError);
     });
     
-    if ($("#catName").length) {
-        console.log("Loading cat details");
-        window.ctrl.http.getCats(window.ctrl.getCatsSuccess, window.ctrl.callbackError);
-    }
-    
-    $("#addButton").on("click", function () {
-        window.location.href = "./views/addCat.html";
+    // Handle add cat button click
+    $("#add-cat-btn").on("click", function() {
+        window.location.href = "add-cat.html";
     });
     
-    $("#modifyButton").on("click", function () {
-        window.location.href = "./views/modifyCat.html";
+    // Handle cat form submission if on add/edit cat page
+    $("#cat-form").on("submit", function(event) {
+        event.preventDefault();
+        
+        // Get cat data from form
+        const catData = {
+            name: $("#catName").val(),
+            breed: $("#catBreed").val(),
+            birthdate: $("#catBirthdate").val(),
+            funFact: $("#catFunFact").val(),
+            description: $("#catDescription").val(),
+            isPurchased: $("#catIsPurchased").is(":checked")
+        };
+        
+        // Check if this is an edit (has cat ID) or add (no cat ID)
+        const urlParams = new URLSearchParams(window.location.search);
+        const catId = urlParams.get('id');
+        
+        if (catId) {
+            // Update existing cat
+            window.adminCtrl.http.updateCat(catId, catData, window.adminCtrl.updateCatSuccess, window.adminCtrl.callbackError);
+        } else {
+            // Add new cat
+            window.adminCtrl.http.addCat(catData, window.adminCtrl.addCatSuccess, window.adminCtrl.callbackError);
+        }
     });
 });

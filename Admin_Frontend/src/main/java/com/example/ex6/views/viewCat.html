@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Purrfect Haven - Administration</title>
-    <link rel="stylesheet" href="view.css">
+    <title>Purrfect Haven - Ajouter/Modifier un Chat</title>
+    <link rel="stylesheet" href="../css/view.css">
+    <link rel="stylesheet" href="../css/form.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </head>
 <body>
     <header class="header">
@@ -22,8 +24,8 @@
         </div>
         
         <div class="action-buttons">
-            <button class="btn btn-primary" id="add-cat-btn">
-                Ajouter un chat
+            <button class="btn btn-secondary" onclick="window.location.href='view.html'">
+                Retour
             </button>
             <button class="btn btn-logout" id="logout-btn">
                 Déconnexion
@@ -31,10 +33,53 @@
         </div>
     </header>
 
-    <div id="cats-list" class="cats-container">
-        <div class="loading">Chargement des chats...</div>
+    <div class="form-container">
+        <h2 id="form-title">Ajouter un nouveau chat</h2>
+        
+        <form id="cat-form">
+            <div class="form-group">
+                <label for="catName">Nom du chat</label>
+                <input type="text" id="catName" required placeholder="Nom du chat">
+            </div>
+            
+            <div class="form-group">
+                <label for="catBreed">Race</label>
+                <select id="catBreed" required>
+                    <option value="">Sélectionner une race</option>
+                    <!-- Will be populated dynamically -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="catBirthdate">Date de naissance</label>
+                <input type="date" id="catBirthdate" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="catFunFact">Anecdote</label>
+                <input type="text" id="catFunFact" placeholder="Une anecdote intéressante">
+            </div>
+            
+            <div class="form-group">
+                <label for="catDescription">Description</label>
+                <textarea id="catDescription" rows="4" placeholder="Description du chat"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="catImage">Image</label>
+                <input type="file" id="catImage" accept="image/*">
+                <div class="image-preview">
+                    <img id="catImagePreview" src="/api/placeholder/400/300" alt="Aperçu de l'image">
+                </div>
+            </div>
+            
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="catIsPurchased">
+                <label for="catIsPurchased">Déjà vendu</label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </form>
     </div>
-
-    <script src="script.js"></script>
 </body>
 </html>
