@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purrfect Haven - Administration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f9f4ef;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4b8a5' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 15px 20px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(149, 157, 165, 0.1);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .cat-icon {
+            width: 45px;
+            height: 45px;
+            background-color: #f5aa7a;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        h1 {
+            color: #5e4b56;
+            font-size: 24px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background-color: #f5aa7a;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #e89b68;
+        }
+
+        .btn-secondary {
+            background-color: #eae0d5;
+            color: #5e4b56;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d9cdbf;
+        }
+
+        .btn-danger {
+            background-color: #e16162;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #d04f50;
+        }
+
+        .btn-logout {
+            background-color: #5e4b56;
+            color: white;
+        }
+
+        .btn-logout:hover {
+            background-color: #4d3c45;
+        }
+
+        .cats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .cat-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(149, 157, 165, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .cat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .cat-header {
+            padding: 15px;
+            background-color: #5e4b56;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .cat-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .cat-info {
+            padding: 20px;
+        }
+
+        .info-field {
+            margin-bottom: 15px;
+        }
+
+        .info-field label {
+            display: block;
+            font-weight: 500;
+            color: #5e4b56;
+            margin-bottom: 5px;
+        }
+
+        .info-field p {
+            background-color: #f9f4ef;
+            padding: 10px;
+            border-radius: 6px;
+            color: #3a3a3a;
+        }
+
+        .cat-actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #5e4b56;
+        }
+
+        .no-cats {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #5e4b56;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(149, 157, 165, 0.2);
+        }
+
+        /* Pour les écrans mobiles */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .logo-section {
+                justify-content: center;
+            }
+
+            .action-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-section">
+            <div class="cat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12,19 C7.5,19 4,15.5 4,11 L4,9 L2,7 L4.5,4 L7,6 L9,6 L12,3 L15,6 L17,6 L19.5,4 L22,7 L20,9 L20,11 C20,15.5 16.5,19 12,19 Z"></path>
+                    <path d="M9,13 A0.5,0.5,0,1,1,9,14, A0.5,0.5,0,1,1,9,13"></path>
+                    <path d="M15,13 A0.5,0.5,0,1,1,15,14, A0.5,0.5,0,1,1,15,13"></path>
+                    <path d="M12,16 L12,17"></path>
+                    <path d="M8,16.5 Q12,19 16,16.5"></path>
+                </svg>
+            </div>
+            <h1>Purrfect Haven</h1>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-primary" id="add-cat-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Ajouter un chat
+            </button>
+            <button class="btn btn-logout" id="logout-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                Déconnexion
+            </button>
+        </div>
+    </header>
+
+    <div id="cats-list" class="cats-container">
+        <div class="loading">Chargement des chats...</div>
+    </div>
+
+    <script>
+        // Données de démonstration pour simuler une API
+        const catsData = [
+            {
+                id: 1,
+                name: "Whiskers",
+                age: "3 ans",
+                breed: "Siamois",
+                funFact: "Adore se cacher dans les boîtes",
+                description: "Whiskers est un chat très joueur et affectueux. Il s'entend bien avec les autres animaux et adore les câlins.",
+                image: "/api/placeholder/400/300"
+            },
+            {
+                id: 2,
+                name: "Luna",
+                age: "2 ans",
+                breed: "Maine Coon",
+                funFact: "Peut ouvrir les portes avec ses pattes",
+                description: "Luna est une grande chatte majestueuse avec un pelage épais. Elle est très indépendante mais reste fidèle à sa famille.",
+                image: "/api/placeholder/400/300"
+            },
+            {
+                id: 3,
+                name: "Oliver",
+                age: "1 an",
+                breed: "British Shorthair",
+                funFact: "Dort toujours sur le dos",
+                description: "Oliver est un jeune chat plein d'énergie. Il adore jouer et explorer son environnement.",
+                image: "/api/placeholder/400/300"
+            },
+            {
+                id: 4,
+                name: "Bella",
+                age: "4 ans",
+                breed: "Persan",
+                funFact: "Miaule pour dire bonjour",
+                description: "Bella est une chatte calme et élégante. Elle aime se faire toiletter et passer du temps sur les genoux de son propriétaire.",
+                image: "/api/placeholder/400/300"
+            }
+        ];
+
+        // Fonction pour afficher les chats
+        function displayCats(cats) {
+            const catsContainer = document.getElementById('cats-list');
+            
+            if (cats.length === 0) {
+                catsContainer.innerHTML = `
+                    <div class="no-cats">
+                        <p>Aucun chat n'est disponible actuellement.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            catsContainer.innerHTML = '';
+            
+            cats.forEach(cat => {
+                const catCard = document.createElement('div');
+                catCard.className = 'cat-card';
+                catCard.innerHTML = `
+                    <div class="cat-header">${cat.name}</div>
+                    <img src="${cat.image}" alt="${cat.name}" class="cat-image">
+                    <div class="cat-info">
+                        <div class="info-field">
+                            <label>Âge:</label>
+                            <p>${cat.age}</p>
+                        </div>
+                        <div class="info-field">
+                            <label>Race:</label>
+                            <p>${cat.breed}</p>
+                        </div>
+                        <div class="info-field">
+                            <label>Anecdote:</label>
+                            <p>${cat.funFact}</p>
+                        </div>
+                        <div class="info-field">
+                            <label>Description:</label>
+                            <p>${cat.description}</p>
+                        </div>
+                    </div>
+                    <div class="cat-actions">
+                        <button class="btn btn-secondary modify-cat" data-id="${cat.id}">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Modifier
+                        </button>
+                        <button class="btn btn-danger delete-cat" data-id="${cat.id}">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                <line x1="10" y1="11" x2="10" y2="17"></line>
+                                <line x1="14" y1="11" x2="14" y2="17"></line>
+                            </svg>
+                            Supprimer
+                        </button>
+                    </div>
+                `;
+
+                catsContainer.appendChild(catCard);
+            });
+
+            // Ajouter les gestionnaires d'événements
+            document.querySelectorAll('.modify-cat').forEach(button => {
+                button.addEventListener('click', function() {
+                    const catId = this.getAttribute('data-id');
+                    window.location.href = `edit-cat.html?id=${catId}`;
+                });
+            });
+
+            document.querySelectorAll('.delete-cat').forEach(button => {
+                button.addEventListener('click', function() {
+                    const catId = this.getAttribute('data-id');
+                    if (confirm('Êtes-vous sûr de vouloir supprimer ce chat ?')) {
+                        deleteCat(catId);
+                    }
+                });
+            });
+        }
+
+        // Simuler le chargement des données depuis une API
+        setTimeout(() => {
+            displayCats(catsData);
+        }, 1000);
+
+        // Gérer la suppression d'un chat
+        function deleteCat(id) {
+            // Dans une application réelle, vous enverriez une requête DELETE à votre API
+            console.log(`Suppression du chat avec l'ID: ${id}`);
+            
+            // Simuler la suppression locale
+            const updatedCats = catsData.filter(cat => cat.id.toString() !== id.toString());
+            displayCats(updatedCats);
+        }
+
+        // Gestionnaires d'événements pour les boutons principaux
+        document.getElementById('add-cat-btn').addEventListener('click', function() {
+            window.location.href = 'add-cat.html';
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
