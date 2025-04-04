@@ -66,7 +66,7 @@ public class GatewayController {
     }
 
     // Add a new cat - forward to the Cat Service
-    @PostMapping("/catAdd")
+    @PostMapping("/addCat")
     public ResponseEntity<String> addCat(@RequestParam String name, @RequestParam String breed, @RequestParam int age) {
         String url = "http://localhost:8082/addCat";  // Replace with the actual URL of the cat API
         String requestBody = "name=" + name + "&breed=" + breed + "&age=" + age;
