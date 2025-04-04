@@ -1,5 +1,7 @@
 package com.example.ex6.service;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +40,52 @@ public class UserService {
         }
         return userDTOs;
     }
+
+    // Authentication method
+    public Optional<User> login(String email, String password) {
+        Optional<User> user = userRepository.findByEmail(email);
+    
+        if (user.isPresent()) {
+            System.out.println("User found: " + user.get().getEmail());
+            System.out.println("Stored Password: " + user.get().getPassword());  // This is the hashed password
+            System.out.println("Entered Password: " + password);  // This is the plain text password
+
+            // Check if the entered password matches the stored hashed password
+            if (hashPassword(password).equals(user.get().getPassword())) {
+
+                System.out.println("Passwords match! Returning user.");
+                return user;
+            } else {
+                System.out.println("Passwords do NOT match!");
+                System.out.println("Entered Hashed Password : " + hashPassword(password)); 
+            }
+        } else {
+        System.out.println("No user found with this email.");
+        }
+
+        return Optional.empty();
+    }
+
+    public static String hashPassword(String password) {
+        try {
+            // Create a MessageDigest instance for SHA-256 (you can use other algorithms)
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+            // Perform the hashing
+            byte[] hashedBytes = digest.digest(password.getBytes());
+
+            // Convert the hashed bytes into a hex string
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashedBytes) {
+                hexString.append(String.format("%02x", b));
+            }
+            
+            return hexString.toString(); // Return the hashed password as a hexadecimal string
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 /*
     @Transactional
     public ResponseEntity<String> addNewUser(
@@ -70,12 +118,5 @@ public class UserService {
         return ResponseEntity.ok("User saved successfully.");
     }
 */
-    // Authentication method
-    public Optional<User> login(String email, String password) {
-        Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent() && user.get().getPassword().equals(password)) {
-        return user;
-        }
-     return Optional.empty();
-    }
+    
 }
