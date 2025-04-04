@@ -6,28 +6,30 @@ import java.util.Date;
 public class CatDTO {
     private Integer id;
     private String name;
-    private String birthdate;  // Store as String
+    private String birthdate;  // formatted as "yyyy-MM-dd"
     private String breedName;
     private String funFact;
     private String buyer;
     private String description;
 
-    // Constructor with Date conversion
+    // Constructor that directly accepts Date and converts it
     public CatDTO(Integer id, String name, Date birthdate, String breedName, String funFact, String buyer, String description) {
         this.id = id;
         this.name = name;
-        this.birthdate = formatDate(birthdate);  // Format date to String
+        this.birthdate = formatDate(birthdate);
         this.breedName = breedName;
         this.funFact = funFact;
         this.buyer = buyer;
         this.description = description;
     }
 
-    // Format Date to String (e.g., "yyyy-MM-dd")
-    private String formatDate(Date birthdate) {
-        if (birthdate != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            return sdf.format(birthdate);
+    // Default constructor (useful for frameworks like Spring)
+    public CatDTO() {}
+
+    // Formats the Date object to "yyyy-MM-dd"
+    private String formatDate(Date date) {
+        if (date != null) {
+            return new SimpleDateFormat("yyyy-MM-dd").format(date);
         }
         return null;
     }
@@ -87,5 +89,14 @@ public class CatDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    // Optionally, add a method to parse a string date into a Date object, in case you need that later
+    public static Date parseDate(String dateStr) {
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
+        } catch (Exception e) {
+            return null; // or handle exception as needed
+        }
     }
 }

@@ -13,7 +13,7 @@ public class Cat {
     private Integer id;
 
     @Column(name = "name", length = 50)
-    private String nom;
+    private String name;
 
     @Column(name = "birthdate")
     @Temporal(TemporalType.DATE)
@@ -49,11 +49,11 @@ public class Cat {
     }
 
     public String getName() {
-        return nom;
+        return name;
     }
 
-    public void setName(String nom) {
-        this.nom = nom;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Date getBirthdate() {

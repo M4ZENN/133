@@ -25,12 +25,14 @@ public class CatController {
 
     // Handler to add a new cat
     @PostMapping(path = "/addCat")
-    public @ResponseBody String addNewCat(@RequestParam String name,
-                                          @RequestParam String birthdate,
-                                          @RequestParam Integer breedId,
-                                          @RequestParam String funFact,
-                                          @RequestParam String description) {
-        return catService.addNewCat(name, birthdate, breedId, funFact, description);
+    public @ResponseBody String addNewCat( @RequestParam String name, 
+    @RequestParam String birthdate,
+    @RequestParam Integer buyerId,
+    @RequestParam Integer breedId,
+    @RequestParam String funFact,
+    @RequestParam String description,
+    @RequestParam(required = false) Boolean isPurchased) {
+        return catService.addNewCat(name, birthdate, buyerId, breedId, funFact, description, isPurchased);
     }
 
     // Handler to update an existing cat
