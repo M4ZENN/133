@@ -7,7 +7,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,6 +69,21 @@ public class GatewayController {
         return ResponseEntity.ok("Session destroyed, user logged out!");
     }
 
+    // Get all cats - forward to the Cat Service
+    @GetMapping("/getCats")
+    public ResponseEntity<String> getAllCats() {
+        String url = "http://localhost:8082/getCats"; // URL of the get all cats endpoint
+
+        // Forward the GET request to the Cat Service
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return ResponseEntity.ok(response.getBody());
+        } else {
+            return ResponseEntity.badRequest().body("Failed to retrieve cats.");
+        }
+    }
+
     // Add a new cat - forward to the Cat Service
     @PostMapping("/addCat")
     public ResponseEntity<String> addCat(@RequestParam String name,
@@ -97,21 +115,61 @@ public class GatewayController {
         }
     }
 
-    // Buy a cat - forward to the Cat Service
-    @PostMapping("/cat/buy")
-    public ResponseEntity<String> buyCat(@RequestParam String name) {
-        String url = "http://localhost:8082/buyCat"; // Replace with actual Cat Buy URL
-        String requestBody = "name=" + name;
+    // Update cat information - forward to the Cat Service
+    @PutMapping("/updateCatInformation")
+    public ResponseEntity<String> updateCatInformation(@RequestParam Integer id,
+            @RequestParam String name,
+            @RequestParam String birthdate,
+            @RequestParam Integer buyerId,
+            @RequestParam Integer breedId,
+            @RequestParam String funFact,
+            @RequestParam String description) {
+        String url = "http://localhost:8082/updateCatInformation"; // URL of the update cat information endpoint
+        String requestBody = "id=" + id + "&name=" + name + "&birthdate=" + birthdate +
+                "&buyerId=" + buyerId + "&breedId=" + breedId +
+                "&funFact=" + funFact + "&description=" + description;
 
         // Forward the request to the Cat Service
-        ResponseEntity<String> response = forwardRequest(url, HttpMethod.POST, requestBody);
+        ResponseEntity<String> response = forwardRequest(url, HttpMethod.PUT, requestBody);
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            return ResponseEntity.ok("Cat bought successfully!");
+            return ResponseEntity.ok("Cat information updated successfully!");
         } else {
-            return ResponseEntity.badRequest().body("Failed to buy cat.");
+            return ResponseEntity.badRequest().body("Failed to update cat information.");
         }
     }
 
-    // Other methods can follow the same pattern...
+    // Update purchase status - forward to the Cat Service
+    @PutMapping("/updatePurchase")
+    public ResponseEntity<String> updatePurchase(@RequestParam Integer id,
+            @RequestParam Integer buyerId) {
+        String url = "http://localhost:8082/updatePurshase"; // URL of the update purchase endpoint
+        String requestBody = "id=" + id + "&buyerId=" + buyerId;
+
+        // Forward the request to the Cat Service
+        ResponseEntity<String> response = forwardRequest(url, HttpMethod.PUT, requestBody);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return ResponseEntity.ok("Cat purchase updated successfully!");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to update cat purchase.");
+        }
+    }
+
+    // Delete a cat - forward to the Cat Service
+    @DeleteMapping("/deleteCat")
+    public ResponseEntity<String> deleteCat(@RequestParam Integer id) {
+        String url = "http://localhost:8082/deleteCat"; // URL of the delete cat endpoint
+        String requestBody = "id=" + id;
+
+        // Forward the request to the Cat Service
+        ResponseEntity<String> response = forwardRequest(url, HttpMethod.DELETE, requestBody);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return ResponseEntity.ok("Cat deleted successfully!");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to delete cat.");
+        }
+    }
+
 }
