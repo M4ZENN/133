@@ -3,7 +3,6 @@ package com.example.ex6.controller;
 import com.example.ex6.model.Cat;
 import com.example.ex6.service.CatService;
 
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,22 +25,37 @@ public class CatController {
     // Handler to add a new cat
     @PostMapping(path = "/addCat")
     public @ResponseBody String addNewCat(@RequestParam String name,
-                                          @RequestParam String birthdate,
-                                          @RequestParam Integer breedId,
-                                          @RequestParam String funFact,
-                                          @RequestParam String description) {
-        return catService.addNewCat(name, birthdate, breedId, funFact, description);
+            @RequestParam String birthdate,
+            @RequestParam Integer buyerId,
+            @RequestParam Integer breedId,
+            @RequestParam String funFact,
+            @RequestParam String description,
+            @RequestParam(required = false) Boolean isPurchased) {
+        return catService.addNewCat(name, birthdate, buyerId, breedId, funFact, description, isPurchased);
     }
 
     // Handler to update an existing cat
-    @PutMapping(path = "/updateCat/{id}")
-    public @ResponseBody String updateCat(@PathVariable Integer id, @RequestBody Cat updatedCat) {
-        return catService.updateCat(id, updatedCat);
+    @PutMapping(path = "/updateCatInformation")
+    public @ResponseBody String updateCat(@RequestParam Integer id,
+            @RequestParam String name,
+            @RequestParam String birthdate,
+            @RequestParam Integer buyerId,
+            @RequestParam Integer breedId,
+            @RequestParam String funFact,
+            @RequestParam String description) {
+        return catService.updateCatInformation(id, name, birthdate, buyerId, breedId, funFact, description);
+    }
+
+    // Handler to update an existing cat
+    @PutMapping(path = "/updatePurshase")
+    public @ResponseBody String updateCat(@RequestParam Integer id,
+            @RequestParam Integer buyerId) {
+        return catService.purchaseCat(id, buyerId);
     }
 
     // Handler to delete a cat
-    @DeleteMapping(path = "/deleteCat/{id}")
-    public @ResponseBody String deleteCat(@PathVariable Integer id) {
+    @DeleteMapping(path = "/deleteCat")
+    public @ResponseBody String deleteCat(@RequestParam Integer id) {
         return catService.deleteCat(id);
     }
 }
