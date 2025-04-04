@@ -19,12 +19,11 @@ public class Cat {
     @Temporal(TemporalType.DATE)
     private Date birthdate;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_buyer", referencedColumnName = "pk_buyer") // Assuming Buyer entity exists and pk_buyer is the primary key of Buyer
-    private Buyer buyer;
+    @Column(name = "fk_buyer")
+    private Integer buyerId; // Instead of referencing the Buyer entity, store the buyer's user ID
 
     @ManyToOne
-    @JoinColumn(name = "fk_breed", referencedColumnName = "fk_breed")
+    @JoinColumn(name = "fk_breed", referencedColumnName = "pk_breed")
     private Breed breed;
 
     @Column(name = "funFact", length = 255)
@@ -65,12 +64,8 @@ public class Cat {
         this.birthdate = birthdate;
     }
 
-    public Buyer getBuyer() {
-        return buyer;
-    }
-
-    public void setBuyer(Buyer buyer) {
-        this.buyer = buyer;
+    public void setBuyerFk(Integer buyerId) {
+        this.buyerId = buyerId;
     }
 
     public Breed getBreed() {

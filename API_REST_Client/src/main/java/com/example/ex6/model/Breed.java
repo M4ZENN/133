@@ -1,4 +1,4 @@
-package main.java.com.example.ex6.model;
+package com.example.ex6.model;
 
 import jakarta.persistence.*;
 
