@@ -1,88 +1,60 @@
-    <!DOCTYPE html>
-    <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Purrfect Haven - Administration</title>
-        <link rel="stylesheet" href="../css/view.css">
-
-    </head>
-    <body>
-        <header class="header">
-            <div class="logo-section">
-                <div class="cat-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12,19 C7.5,19 4,15.5 4,11 L4,9 L2,7 L4.5,4 L7,6 L9,6 L12,3 L15,6 L17,6 L19.5,4 L22,7 L20,9 L20,11 C20,15.5 16.5,19 12,19 Z"></path>
-                        <path d="M9,13 A0.5,0.5,0,1,1,9,14, A0.5,0.5,0,1,1,9,13"></path>
-                        <path d="M15,13 A0.5,0.5,0,1,1,15,14, A0.5,0.5,0,1,1,15,13"></path>
-                        <path d="M12,16 L12,17"></path>
-                        <path d="M8,16.5 Q12,19 16,16.5"></path>
-                    </svg>
-                </div>
-                <h1>Purrfect Haven</h1>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purrfect Haven - Administration</title>
+    <script src="../Javascripts/helpers/jquery-1.10.2.min.js"></script>
+    <script src="../Javascripts/services/servicesHttp.js"></script>
+    <script src="../Javascripts/controllers/indexCtrl.js"></script>
+    <link rel="stylesheet" href="../css/view.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo-section">
+            <div class="cat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12,19 C7.5,19 4,15.5 4,11 L4,9 L2,7 L4.5,4 L7,6 L9,6 L12,3 L15,6 L17,6 L19.5,4 L22,7 L20,9 L20,11 C20,15.5 16.5,19 12,19 Z"></path>
+                    <path d="M9,13 A0.5,0.5,0,1,1,9,14, A0.5,0.5,0,1,1,9,13"></path>
+                    <path d="M15,13 A0.5,0.5,0,1,1,15,14, A0.5,0.5,0,1,1,15,13"></path>
+                    <path d="M12,16 L12,17"></path>
+                    <path d="M8,16.5 Q12,19 16,16.5"></path>
+                </svg>
             </div>
-
-            <div class="action-buttons">
-                <button class="btn btn-logout" id="logout-btn">
-                    Déconnexion
-                </button>
-            </div>
-        </header>
-
-    
-        <div id="cats-list" class="cats-container">
-            <div class="cat-card">
-                <div class="cat-header">Luna</div>
-            <img href="https://freecatphotoapp.com" src="https://cdn.freecodecamp.org/curriculum/cat-photo-app/relaxing-cat.jpg" alt="A cute orange cat lying on its back." (a) img src=href="https://freecatphotoapp.com">
-                <div class="cat-info">
-                    <div class="info-field">
-                        <label>Âge:</label>
-                        <p>2 ans</p>
-                    </div>
-                    <div class="info-field">
-                        <label>Race:</label>
-                        <p>Maine Coon</p>
-                    </div>
-                    <div class="info-field">
-                        <label>Anecdote:</label>
-                        <p>Peut ouvrir les portes avec ses pattes</p>
-                    </div>
-                    <div class="info-field">
-                        <label>Description:</label>
-                        <p>Luna est une grande chatte majestueuse avec un pelage épais. Elle est très indépendante mais reste fidèle à sa famille.</p>
-                    </div>
-                </div>
-                <div class="cat-actions">
-                    <button class="btn btn-buy">Buy</button>
-                </div>
-            </div>
-            <div id="cats-list" class="cats-container">
-                <div class="cat-card">
-                    <div class="cat-header">Luna</div>
-                <img href="https://freecatphotoapp.com" src="https://cdn.freecodecamp.org/curriculum/cat-photo-app/relaxing-cat.jpg" alt="A cute orange cat lying on its back." (a) img src=href="https://freecatphotoapp.com">
-                    <div class="cat-info">
-                        <div class="info-field">
-                            <label>Âge:</label>
-                            <p>2 ans</p>
-                        </div>
-                        <div class="info-field">
-                            <label>Race:</label>
-                            <p>Maine Coon</p>
-                        </div>
-                        <div class="info-field">
-                            <label>Anecdote:</label>
-                            <p>Peut ouvrir les portes avec ses pattes</p>
-                        </div>
-                        <div class="info-field">
-                            <label>Description:</label>
-                            <p>Luna est une grande chatte majestueuse avec un pelage épais. Elle est très indépendante mais reste fidèle à sa famille.</p>
-                        </div>
-                    </div>
-                    <div class="cat-actions">
-                        <button class="btn btn-buy">Buy</button>
-                    </div>
-                </div>
+            <h1>Purrfect Haven</h1>
         </div>
-    </body>
-    </html>
-    
+        <div class="action-buttons">
+            <button class="btn btn-logout" id="logout-btn">Déconnexion</button>
+        </div>
+    </header>
+
+    <div id="cats-list" class="cats-container">
+        <!-- Cat card template (hidden by default) -->
+        <div class="cat-card template-card" style="display: none;">
+            <div class="cat-header"></div>
+            <img src="" alt="Cat Image">
+            <div class="cat-info">
+                <div class="info-field">
+                    <label>Âge:</label>
+                    <p></p>
+                </div>
+                <div class="info-field">
+                    <label>Race:</label>
+                    <p></p>
+                </div>
+                <div class="info-field">
+                    <label>Anecdote:</label>
+                    <p></p>
+                </div>
+                <div class="info-field">
+                    <label>Description:</label>
+                    <p></p>
+                </div>
+            </div>
+            <div class="cat-actions">
+                <button class="btn btn-buy">Buy</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

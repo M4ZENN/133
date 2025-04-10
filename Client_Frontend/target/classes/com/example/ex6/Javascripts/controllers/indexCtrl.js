@@ -1,127 +1,81 @@
 class IndexCtrl {
     constructor() {
         this.http = new servicesHttp();
-        this.connectSuccess = this.connectSuccess.bind(this);
-        this.disconnectSuccess = this.disconnectSuccess.bind(this);
         this.callbackError = this.callbackError.bind(this);
         this.getCatsSuccess = this.getCatsSuccess.bind(this);
-        
+
         this.init();
     }
 
     init() {
-        const user = JSON.parse(localStorage.getItem("user"));
-        if (user) {
-            this.displayUser(user);
-        }
+        // Fetch and display the cats when the page loads
+        this.http.chargerCats(this.getCatsSuccess, this.callbackError);
     }
 
-    connectSuccess(data) {
-        console.log("connectSuccess called", data);
-        
-        if (data.success) {
-            localStorage.setItem("user", JSON.stringify(data));
-            this.displayUser(data);
-
-            Toastify({
-                text: "Login successful",
-                duration: 3000,
-                gravity: "top",
-                position: "right",
-                backgroundColor: "#33cc33"
-            }).showToast();
-        }
-    }
-
-    disconnectSuccess() {
-        localStorage.removeItem("user");
-        Toastify({
-            text: "User disconnected",
-            duration: 3000,
-            gravity: "top",
-            position: "right",
-            backgroundColor: "#33cc33"
-        }).showToast();
-        window.location.href = "./login.html";
-    }
-
-    displayUser(user) {
-        $("#user-greeting").text(`Bienvenue, ${user.name}`);
-        $("#login-section").hide();
-        $("#dashboard-section").show();
-    }
-
+    /**
+     * Success callback for loading the list of cats from the server.
+     * @param {Object} data - The raw data returned from the server.
+     */
     getCatsSuccess(data) {
         console.log("getCatsSuccess called", data);
-        
-        if (data.cats && data.cats.length > 0) {
-            const cat = data.cats[0]; // On prend le premier chat pour remplir les champs
-            
-            $("#catName").val(cat.name);
-            $("#catBirthdate").val(cat.birthdate);
-            $("#catFunFact").val(cat.funFact);
-            $("#catDescription").val(cat.description);
-            
-            if (cat.image) {
-                $("#catImage").attr("src", `data:image/jpeg;base64,${cat.image}`);
+    
+        const catsListContainer = $("#cats-list");
+        const templateCatCard = $(".cat-card.template-card");
+    
+        data.forEach(function(cat) {
+            const catCard = templateCatCard.clone()[0]; // Clone template card
+            catCard.style.display = "block";
+    
+            // Calculate age from birthdate
+            const birthDate = new Date(cat.birthdate);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
             }
-            
-            $("#catIsPurchased").prop("checked", cat.isPurchased);
-            
-            // Charger les races dans la liste déroulante
-            const breedSelect = $("#catBreed");
-            breedSelect.empty();
-            data.breeds.forEach(breed => {
-                breedSelect.append(new Option(breed.name, breed.pk_breed));
-            });
-            breedSelect.val(cat.fk_breed);
-            
-            Toastify({
-                text: "Cat details loaded successfully",
-                duration: 3000,
-                gravity: "top",
-                position: "right",
-                backgroundColor: "#33cc33"
-            }).showToast();
-        }
+    
+            // Fill in cat data
+            $(catCard).find(".cat-header").text(cat.name);
+            $(catCard).find(".cat-info .info-field p").eq(0).text(`${age} ans`);
+            $(catCard).find(".cat-info .info-field p").eq(1).text(cat.breed.name.trim());
+            $(catCard).find(".cat-info .info-field p").eq(2).text(cat.funFact);
+            $(catCard).find(".cat-info .info-field p").eq(3).text(cat.description.trim());
+    
+            // Set image or fallback
+            const image = cat.image || "https://via.placeholder.com/200x150?text=No+Image";
+            $(catCard).find("img").attr("src", image).attr("alt", cat.name);
+    
+            const buyButton = $(catCard).find(".btn-buy");
+
+            if (cat.isPurchased) {
+                buyButton.prop("disabled", true).text("Acheté");
+                $(catCard).addClass("purchased"); // Optional: style with CSS
+            } else {
+                buyButton.on("click", () => {
+                    this.http.purchaseCat(cat.id, () => {
+                        buyButton.prop("disabled", true).text("Acheté");
+                        $(catCard).addClass("purchased");
+                    }, this.callbackError);
+                });
+            }
+    
+          
+            // Append to list
+            catsListContainer.append(catCard);
+        });
+    
+        console.log("Cats loaded and displayed successfully");
     }
+    
 
     callbackError(request, status, error) {
-        Toastify({
-            text: "Error: " + error,
-            duration: 3000,
-            gravity: "top",
-            position: "right",
-            backgroundColor: "#ff3333"
-        }).showToast();
+        // Handle errors when loading cats
+        console.error("Error loading cats: " + error);
+        alert("Error loading cats: " + error);  // You can replace this with any other method of error handling
     }
 }
 
 $(document).ready(function () {
     window.ctrl = new IndexCtrl();
-    
-    $("#loginForm").on("submit", function (event) {
-        event.preventDefault();
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        console.log("Form submitted", { email, password });
-        window.ctrl.http.connect(email, password, window.ctrl.connectSuccess, window.ctrl.callbackError);
-    });
-    
-    $("#logout-btn").on("click", function () {
-        window.ctrl.disconnectSuccess();
-    });
-    
-    if ($("#catName").length) {
-        console.log("Loading cat details");
-        window.ctrl.http.getCats(window.ctrl.getCatsSuccess, window.ctrl.callbackError);
-    }
-    
-    $("#addButton").on("click", function () {
-        window.location.href = "./views/addCat.html";
-    });
-    
-    $("#modifyButton").on("click", function () {
-        window.location.href = "./views/modifyCat.html";
-    });
 });
