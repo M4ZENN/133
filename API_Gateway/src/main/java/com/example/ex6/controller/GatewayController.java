@@ -50,7 +50,7 @@ public class GatewayController {
     // Login - forward login data to RESTAPP
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestParam String email, @RequestParam String password, HttpSession session) {
-        String url = "http://localhost:8081/login";
+        String url = "http://localhost:8080/login";
         String requestBody = "email=" + email + "&password=" + password;
 
         // Forward the login request and expect a UserDTO response
@@ -89,7 +89,7 @@ public class GatewayController {
     // Get all cats - forward to the Cat Service
     @GetMapping("/getCats")
     public ResponseEntity<String> getAllCats() {
-        String url = "http://localhost:8082/getCats"; // URL of the get all cats endpoint
+        String url = "http://localhost:8081/getCats"; // URL of the get all cats endpoint
 
         // Forward the GET request to the Cat Service
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
@@ -132,7 +132,7 @@ public class GatewayController {
         }
     }
 
-    // Update cat information - forward to the Cat Servicew
+    // Update cat information - forward to the Cat Service
     @PutMapping("/updateCatInformation")
     public ResponseEntity<String> updateCatInformation(@RequestParam Integer id,
                                                        @RequestParam String name,
