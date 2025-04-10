@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Purrfect Haven - Administration</title>
+    <script src="../Javascripts/helpers/jquery-1.10.2.min.js"></script>
+    <script src="../Javascripts/services/servicesHttp.js"></script>
+    <script src="../Javascripts/controllers/indexCtrl.js"></script>
     <link rel="stylesheet" href="../css/view.css">
-
 </head>
 <body>
     <header class="header">
@@ -21,67 +23,38 @@
             </div>
             <h1>Purrfect Haven</h1>
         </div>
-
         <div class="action-buttons">
-            <button class="btn btn-logout" id="logout-btn">
-                Déconnexion
-            </button>
+            <button class="btn btn-logout" id="logout-btn">Déconnexion</button>
         </div>
     </header>
 
-
     <div id="cats-list" class="cats-container">
-        <div class="cat-card">
-            <div class="cat-header">Luna</div>
-        <img href="https://freecatphotoapp.com" src="https://cdn.freecodecamp.org/curriculum/cat-photo-app/relaxing-cat.jpg" alt="A cute orange cat lying on its back." (a) img src=href="https://freecatphotoapp.com">
+        <!-- Cat card template (hidden by default) -->
+        <div class="cat-card template-card" style="display: none;">
+            <div class="cat-header"></div>
+            <img src="" alt="Cat Image">
             <div class="cat-info">
                 <div class="info-field">
                     <label>Âge:</label>
-                    <p>2 ans</p>
+                    <p></p>
                 </div>
                 <div class="info-field">
                     <label>Race:</label>
-                    <p>Maine Coon</p>
+                    <p></p>
                 </div>
                 <div class="info-field">
                     <label>Anecdote:</label>
-                    <p>Peut ouvrir les portes avec ses pattes</p>
+                    <p></p>
                 </div>
                 <div class="info-field">
                     <label>Description:</label>
-                    <p>Luna est une grande chatte majestueuse avec un pelage épais. Elle est très indépendante mais reste fidèle à sa famille.</p>
+                    <p></p>
                 </div>
             </div>
             <div class="cat-actions">
                 <button class="btn btn-buy">Buy</button>
             </div>
         </div>
-        <div id="cats-list" class="cats-container">
-            <div class="cat-card">
-                <div class="cat-header">Luna</div>
-            <img href="https://freecatphotoapp.com" src="https://cdn.freecodecamp.org/curriculum/cat-photo-app/relaxing-cat.jpg" alt="A cute orange cat lying on its back." (a) img src=href="https://freecatphotoapp.com">
-                <div class="cat-info">
-                    <div class="info-field">
-                        <label>Âge:</label>
-                        <p>2 ans</p>
-                    </div>
-                    <div class="info-field">
-                        <label>Race:</label>
-                        <p>Maine Coon</p>
-                    </div>
-                    <div class="info-field">
-                        <label>Anecdote:</label>
-                        <p>Peut ouvrir les portes avec ses pattes</p>
-                    </div>
-                    <div class="info-field">
-                        <label>Description:</label>
-                        <p>Luna est une grande chatte majestueuse avec un pelage épais. Elle est très indépendante mais reste fidèle à sa famille.</p>
-                    </div>
-                </div>
-                <div class="cat-actions">
-                    <button class="btn btn-buy">Buy</button>
-                </div>
-            </div>
     </div>
 </body>
 </html>
