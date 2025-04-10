@@ -50,7 +50,7 @@ public class GatewayController {
     // Login - forward login data to RESTAPP
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestParam String email, @RequestParam String password, HttpSession session) {
-        String url = "http://localhost:8080/login";
+        String url = "http://localhost:8081/login";
         String requestBody = "email=" + email + "&password=" + password;
 
         // Forward the login request and expect a UserDTO response
