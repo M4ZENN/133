@@ -71,39 +71,52 @@ class IndexCtrl {
         window.location.href = "login.html";
     }
 
-    loadCats() {
-        // Show loading indicator
-        const catsContainer = document.getElementById("cats-list");
-        if (catsContainer) {
-            catsContainer.innerHTML = '<div class="loading">Chargement des chats...</div>';
-        }
-        
-        // Fetch cats from API
-        this.http.getCats(this.getCatsSuccess, this.callbackError);
-    }
-
     getCatsSuccess(data) {
-        try {
-            // Parse response if it's a string
-            const responseData = typeof data === 'string' ? JSON.parse(data) : data;
-            
-            // Display cats in the container
-            this.displayCats(responseData.cats || responseData);
-            
-            // Show success message
-            Toastify({
-                text: "Liste des chats chargée",
-                duration: 2000,
-                gravity: "top",
-                position: "right",
-                backgroundColor: "#33cc33"
-            }).showToast();
-        } catch (error) {
-            console.error("Error processing cats data:", error);
-            this.callbackError(null, "error", "Erreur lors du chargement des chats");
-        }
+        console.log("getCatsSuccess called", data);
+    
+        const catsListContainer = $("#cats-list");
+        const templateCatCard = $(".cat-card.template-card");
+    
+        data.forEach(function(cat) {
+            const catCard = templateCatCard.clone()[0]; // Clone template card
+            catCard.style.display = "block";
+    
+            // Calculate age from birthdate
+            const birthDate = new Date(cat.birthdate);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+    
+            // Fill in cat data
+            $(catCard).find(".cat-header").text(cat.name);
+            $(catCard).find(".cat-info .info-field p").eq(0).text(`${age} ans`);
+            $(catCard).find(".cat-info .info-field p").eq(1).text(cat.breed.name.trim());
+            $(catCard).find(".cat-info .info-field p").eq(2).text(cat.funFact);
+            $(catCard).find(".cat-info .info-field p").eq(3).text(cat.description.trim());
+    
+            // Set image or fallback
+            const image = cat.image || "https://via.placeholder.com/200x150?text=No+Image";
+            $(catCard).find("img").attr("src", image).attr("alt", cat.name);
+    
+            // Append to list
+            catsListContainer.append(catCard);
+        });
+    
+        console.log("Cats loaded and displayed successfully");
+    
+        // Show success Toastify message
+        Toastify({
+            text: "Liste des chats chargée avec succès",
+            duration: 2000,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "#33cc33"
+        }).showToast();
     }
-
+    
     callbackError(request, status, error) {
         Toastify({
             text: "Error: " + error,

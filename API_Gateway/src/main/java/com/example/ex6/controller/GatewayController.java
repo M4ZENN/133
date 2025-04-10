@@ -50,7 +50,7 @@ public class GatewayController {
     // Login - forward login data to RESTAPP
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestParam String email, @RequestParam String password, HttpSession session) {
-        String url = "http://localhost:8080/login";
+        String url = "http://localhost:8081/login";
         String requestBody = "email=" + email + "&password=" + password;
 
         // Forward the login request and expect a UserDTO response
@@ -77,13 +77,6 @@ public class GatewayController {
             errorResponse.put("message", "Invalid credentials or server error.");
             return ResponseEntity.badRequest().body(errorResponse);
         }
-    }
-
-    // Logout - invalidate session
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpSession session) {
-        session.invalidate(); // Destroy session
-        return ResponseEntity.ok("Session destroyed, user logged out!");
     }
 
     // Get all cats - forward to the Cat Service
