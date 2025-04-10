@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.ex6.model.User;
+import com.example.ex6.dto.UserDTO;
 import com.example.ex6.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -32,23 +32,23 @@ public class Controller {
 
     // Login
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password, HttpSession session) {
-        Optional<User> user = userService.login(email, password);
-        if (user.isPresent()) {
-            session.setAttribute("email", email);
-            session.setAttribute("isAdmin", user.get().isAdmin()); // Store the user role (admin/client)
-            
-            // Track the number of visits if not already set
-            if (session.getAttribute("visites") == null) {
-                session.setAttribute("visites", 0);
-            }
-            
-            String role = user.get().isAdmin() ? "Admin" : "Client";
-            return ResponseEntity.ok("User " + email + " logged in as " + role + ".");
+    public ResponseEntity<UserDTO> login(@RequestParam String email, @RequestParam String password, HttpSession session) {
+        Optional<UserDTO> userDTO = userService.login(email, password);
+
+        if (userDTO.isPresent()) {
+            UserDTO user = userDTO.get();
+
+            String role = user.getIsAdmin() ? "Admin" : "Client";
+            System.out.println("User " + user.getEmail() + " with id : " + user.getId() + " logged in as " + role + ".");
+
+            // Returning the userDTO in the response body.
+            return ResponseEntity.ok(user);
         } else {
-            return ResponseEntity.badRequest().body("Invalid credentials.");
+            return ResponseEntity.badRequest().body(null); // Or include a custom error message if needed.
         }
     }
+
+
 
     // Logout
     @PostMapping("/logout")

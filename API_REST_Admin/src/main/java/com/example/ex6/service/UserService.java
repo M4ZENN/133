@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import com.example.ex6.dto.UserDTO;
 import com.example.ex6.model.User;
 import com.example.ex6.repository.UserRepository;
-
 @Service
 public class UserService {
 
@@ -41,30 +40,30 @@ public class UserService {
         return userDTOs;
     }
 
-    // Authentication method
-    public Optional<User> login(String email, String password) {
+    public Optional<UserDTO> login(String email, String password) {
         Optional<User> user = userRepository.findByEmail(email);
     
         if (user.isPresent()) {
-            System.out.println("User found: " + user.get().getEmail());
-            System.out.println("Stored Password: " + user.get().getPassword());  // This is the hashed password
-            System.out.println("Entered Password: " + password);  // This is the plain text password
-
-            // Check if the entered password matches the stored hashed password
-            if (hashPassword(password).equals(user.get().getPassword())) {
-
-                System.out.println("Passwords match! Returning user.");
-                return user;
+            User u = user.get();
+            System.out.println("User found: " + u.getEmail());
+            System.out.println("Stored Password: " + u.getPassword());
+            System.out.println("Entered Password: " + password);
+    
+            if (hashPassword(password).equals(u.getPassword())) {
+                System.out.println("Passwords match! Returning user DTO.");
+                return Optional.of(u.toDTO());
             } else {
                 System.out.println("Passwords do NOT match!");
-                System.out.println("Entered Hashed Password : " + hashPassword(password)); 
+                System.out.println("Entered Hashed Password : " + hashPassword(password));
             }
         } else {
-        System.out.println("No user found with this email.");
+            System.out.println("No user found with this email.");
         }
-
-        return Optional.empty();
+    
+        return Optional.empty(); // ❌ Login failed
     }
+    
+    
 
     public static String hashPassword(String password) {
         try {

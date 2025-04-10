@@ -1,5 +1,8 @@
 package com.example.ex6.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.ex6.dto.UserDTO;
+
 import jakarta.servlet.http.HttpSession;
 
 @RestController
@@ -29,8 +34,8 @@ public class GatewayController {
         this.restTemplate = restTemplate;
     }
 
-    // Reusable method to forward requests to external services
-    private ResponseEntity<String> forwardRequest(String url, HttpMethod method, String requestBody) {
+    // Reusable method to forward requests to external services (now generic)
+    private <T> ResponseEntity<T> forwardRequest(String url, HttpMethod method, String requestBody, Class<T> responseType) {
         // Prepare the headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -38,27 +43,39 @@ public class GatewayController {
         // Wrap the request body and headers in an HttpEntity
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        // Forward the request using RestTemplate
-        return restTemplate.exchange(url, method, entity, String.class);
+        // Forward the request using RestTemplate and expect a response of type T
+        return restTemplate.exchange(url, method, entity, responseType);
     }
 
     // Login - forward login data to RESTAPP
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password,
-            HttpSession session) {
-        String url = "http://localhost:8081/user/login";
+    public ResponseEntity<Map<String, Object>> login(@RequestParam String email, @RequestParam String password, HttpSession session) {
+        String url = "http://localhost:8080/login";
         String requestBody = "email=" + email + "&password=" + password;
 
-        // Forward the login request and get the response
-        ResponseEntity<String> response = forwardRequest(url, HttpMethod.POST, requestBody);
+        // Forward the login request and expect a UserDTO response
+        ResponseEntity<UserDTO> response = forwardRequest(url, HttpMethod.POST, requestBody, UserDTO.class);
 
         // If the login is successful, manage session data
-        if (response.getStatusCode() == HttpStatus.OK) {
-            session.setAttribute("email", email);
-            session.setAttribute("isAdmin", "User Admin"); // Dynamically set this from the response if needed
-            return ResponseEntity.ok(response.getBody());
+        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+            UserDTO user = response.getBody();
+
+            // Store user-related data in session (adjust as needed)
+            session.setAttribute("email", user.getEmail());
+            session.setAttribute("userId", user.getId());
+            session.setAttribute("isAdmin", user.getIsAdmin() ? "Admin" : "Client");
+
+            // Create a response body with both success message and user info
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("message", "Logged in as " + user.getEmail() + " with role " + (user.getIsAdmin() ? "Admin" : "Client"));
+            responseBody.put("user", user);  // Include the UserDTO object in the response
+
+            // Return a success response with user info
+            return ResponseEntity.ok(responseBody);
         } else {
-            return ResponseEntity.badRequest().body("Invalid credentials or server error.");
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", "Invalid credentials or server error.");
+            return ResponseEntity.badRequest().body(errorResponse);
         }
     }
 
@@ -87,18 +104,18 @@ public class GatewayController {
     // Add a new cat - forward to the Cat Service
     @PostMapping("/addCat")
     public ResponseEntity<String> addCat(@RequestParam String name,
-            @RequestParam String birthdate,
-            @RequestParam Integer buyerId,
-            @RequestParam Integer breedId,
-            @RequestParam String funFact,
-            @RequestParam String description,
-            @RequestParam(required = false) Boolean isPurchased) {
+                                         @RequestParam String birthdate,
+                                         @RequestParam Integer buyerId,
+                                         @RequestParam Integer breedId,
+                                         @RequestParam String funFact,
+                                         @RequestParam String description,
+                                         @RequestParam(required = false) Boolean isPurchased) {
         String url = "http://localhost:8082/addCat"; // Replace with the actual URL of the cat API
 
         // Constructing the request body based on new parameters
         String requestBody = "name=" + name + "&birthdate=" + birthdate +
-                "&buyerId=" + buyerId + "&breedId=" + breedId +
-                "&funFact=" + funFact + "&description=" + description;
+                             "&buyerId=" + buyerId + "&breedId=" + breedId +
+                             "&funFact=" + funFact + "&description=" + description;
 
         // Optionally add isPurchased to the request body if it's provided
         if (isPurchased != null) {
@@ -106,7 +123,7 @@ public class GatewayController {
         }
 
         // Forward the request to the Cat Service
-        ResponseEntity<String> response = forwardRequest(url, HttpMethod.POST, requestBody);
+        ResponseEntity<String> response = forwardRequest(url, HttpMethod.POST, requestBody, String.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
             return ResponseEntity.ok("Cat added successfully!");
@@ -118,19 +135,19 @@ public class GatewayController {
     // Update cat information - forward to the Cat Service
     @PutMapping("/updateCatInformation")
     public ResponseEntity<String> updateCatInformation(@RequestParam Integer id,
-            @RequestParam String name,
-            @RequestParam String birthdate,
-            @RequestParam Integer buyerId,
-            @RequestParam Integer breedId,
-            @RequestParam String funFact,
-            @RequestParam String description) {
+                                                       @RequestParam String name,
+                                                       @RequestParam String birthdate,
+                                                       @RequestParam Integer buyerId,
+                                                       @RequestParam Integer breedId,
+                                                       @RequestParam String funFact,
+                                                       @RequestParam String description) {
         String url = "http://localhost:8082/updateCatInformation"; // URL of the update cat information endpoint
         String requestBody = "id=" + id + "&name=" + name + "&birthdate=" + birthdate +
-                "&buyerId=" + buyerId + "&breedId=" + breedId +
-                "&funFact=" + funFact + "&description=" + description;
+                             "&buyerId=" + buyerId + "&breedId=" + breedId +
+                             "&funFact=" + funFact + "&description=" + description;
 
         // Forward the request to the Cat Service
-        ResponseEntity<String> response = forwardRequest(url, HttpMethod.PUT, requestBody);
+        ResponseEntity<String> response = forwardRequest(url, HttpMethod.PUT, requestBody, String.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
             return ResponseEntity.ok("Cat information updated successfully!");
@@ -142,12 +159,12 @@ public class GatewayController {
     // Update purchase status - forward to the Cat Service
     @PutMapping("/updatePurchase")
     public ResponseEntity<String> updatePurchase(@RequestParam Integer id,
-            @RequestParam Integer buyerId) {
+                                                 @RequestParam Integer buyerId) {
         String url = "http://localhost:8082/updatePurshase"; // URL of the update purchase endpoint
         String requestBody = "id=" + id + "&buyerId=" + buyerId;
 
         // Forward the request to the Cat Service
-        ResponseEntity<String> response = forwardRequest(url, HttpMethod.PUT, requestBody);
+        ResponseEntity<String> response = forwardRequest(url, HttpMethod.PUT, requestBody, String.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
             return ResponseEntity.ok("Cat purchase updated successfully!");
@@ -163,7 +180,7 @@ public class GatewayController {
         String requestBody = "id=" + id;
 
         // Forward the request to the Cat Service
-        ResponseEntity<String> response = forwardRequest(url, HttpMethod.DELETE, requestBody);
+        ResponseEntity<String> response = forwardRequest(url, HttpMethod.DELETE, requestBody, String.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
             return ResponseEntity.ok("Cat deleted successfully!");
@@ -171,5 +188,4 @@ public class GatewayController {
             return ResponseEntity.badRequest().body("Failed to delete cat.");
         }
     }
-
 }
