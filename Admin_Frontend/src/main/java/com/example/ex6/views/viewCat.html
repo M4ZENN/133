@@ -1,12 +1,11 @@
 <!DOCTYPE html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Purrfect Haven - Ajouter/Modifier un Chat</title>
+    <title>Purrfect Haven - Administration</title>
     <link rel="stylesheet" href="../css/view.css">
-    <link rel="stylesheet" href="../css/form.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
 </head>
 <body>
     <header class="header">
@@ -22,64 +21,67 @@
             </div>
             <h1>Purrfect Haven</h1>
         </div>
-        
+
         <div class="action-buttons">
-            <button class="btn btn-secondary" onclick="window.location.href='view.html'">
-                Retour
-            </button>
             <button class="btn btn-logout" id="logout-btn">
                 Déconnexion
             </button>
         </div>
     </header>
 
-    <div class="form-container">
-        <h2 id="form-title">Ajouter un nouveau chat</h2>
-        
-        <form id="cat-form">
-            <div class="form-group">
-                <label for="catName">Nom du chat</label>
-                <input type="text" id="catName" required placeholder="Nom du chat">
-            </div>
-            
-            <div class="form-group">
-                <label for="catBreed">Race</label>
-                <select id="catBreed" required>
-                    <option value="">Sélectionner une race</option>
-                    <!-- Will be populated dynamically -->
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="catBirthdate">Date de naissance</label>
-                <input type="date" id="catBirthdate" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="catFunFact">Anecdote</label>
-                <input type="text" id="catFunFact" placeholder="Une anecdote intéressante">
-            </div>
-            
-            <div class="form-group">
-                <label for="catDescription">Description</label>
-                <textarea id="catDescription" rows="4" placeholder="Description du chat"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="catImage">Image</label>
-                <input type="file" id="catImage" accept="image/*">
-                <div class="image-preview">
-                    <img id="catImagePreview" src="/api/placeholder/400/300" alt="Aperçu de l'image">
+
+    <div id="cats-list" class="cats-container">
+        <div class="cat-card">
+            <div class="cat-header">Luna</div>
+        <img href="https://freecatphotoapp.com" src="https://cdn.freecodecamp.org/curriculum/cat-photo-app/relaxing-cat.jpg" alt="A cute orange cat lying on its back." (a) img src=href="https://freecatphotoapp.com">
+            <div class="cat-info">
+                <div class="info-field">
+                    <label>Âge:</label>
+                    <p>2 ans</p>
+                </div>
+                <div class="info-field">
+                    <label>Race:</label>
+                    <p>Maine Coon</p>
+                </div>
+                <div class="info-field">
+                    <label>Anecdote:</label>
+                    <p>Peut ouvrir les portes avec ses pattes</p>
+                </div>
+                <div class="info-field">
+                    <label>Description:</label>
+                    <p>Luna est une grande chatte majestueuse avec un pelage épais. Elle est très indépendante mais reste fidèle à sa famille.</p>
                 </div>
             </div>
-            
-            <div class="form-group checkbox-group">
-                <input type="checkbox" id="catIsPurchased">
-                <label for="catIsPurchased">Déjà vendu</label>
+            <div class="cat-actions">
+                <button class="btn btn-buy">Buy</button>
             </div>
-            
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
-        </form>
+        </div>
+        <div id="cats-list" class="cats-container">
+            <div class="cat-card">
+                <div class="cat-header">Luna</div>
+            <img href="https://freecatphotoapp.com" src="https://cdn.freecodecamp.org/curriculum/cat-photo-app/relaxing-cat.jpg" alt="A cute orange cat lying on its back." (a) img src=href="https://freecatphotoapp.com">
+                <div class="cat-info">
+                    <div class="info-field">
+                        <label>Âge:</label>
+                        <p>2 ans</p>
+                    </div>
+                    <div class="info-field">
+                        <label>Race:</label>
+                        <p>Maine Coon</p>
+                    </div>
+                    <div class="info-field">
+                        <label>Anecdote:</label>
+                        <p>Peut ouvrir les portes avec ses pattes</p>
+                    </div>
+                    <div class="info-field">
+                        <label>Description:</label>
+                        <p>Luna est une grande chatte majestueuse avec un pelage épais. Elle est très indépendante mais reste fidèle à sa famille.</p>
+                    </div>
+                </div>
+                <div class="cat-actions">
+                    <button class="btn btn-buy">Buy</button>
+                </div>
+            </div>
     </div>
 </body>
 </html>
