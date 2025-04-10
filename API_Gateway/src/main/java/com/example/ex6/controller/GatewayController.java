@@ -79,6 +79,13 @@ public class GatewayController {
         }
     }
 
+    // Logout - invalidate session
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpSession session) {
+        session.invalidate(); // Destroy session
+        return ResponseEntity.ok("Session destroyed, user logged out!");
+    }
+
     // Get all cats - forward to the Cat Service
     @GetMapping("/getCats")
     public ResponseEntity<String> getAllCats() {
@@ -125,7 +132,7 @@ public class GatewayController {
         }
     }
 
-    // Update cat information - forward to the Cat Service
+    // Update cat information - forward to the Cat Servicew
     @PutMapping("/updateCatInformation")
     public ResponseEntity<String> updateCatInformation(@RequestParam Integer id,
                                                        @RequestParam String name,
