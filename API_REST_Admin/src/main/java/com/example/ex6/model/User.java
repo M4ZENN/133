@@ -2,6 +2,8 @@ package com.example.ex6.model;
 
 import java.time.LocalDate;
 
+import com.example.ex6.dto.UserDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -103,4 +105,17 @@ public class User {
     public void setAdmin(boolean admin) {
         isAdmin = admin;
     }
+
+    public UserDTO toDTO() {
+    return new UserDTO(
+        this.id,
+        this.firstName,
+        this.lastName,
+        this.birthDate,
+        this.email,
+        this.phoneNumber,
+        this.isAdmin
+    );
+}
+
 }

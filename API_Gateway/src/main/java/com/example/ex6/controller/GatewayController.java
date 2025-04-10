@@ -1,5 +1,8 @@
 package com.example.ex6.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.ex6.dto.UserDTO;
+
 import jakarta.servlet.http.HttpSession;
 
 @RestController
@@ -29,8 +34,8 @@ public class GatewayController {
         this.restTemplate = restTemplate;
     }
 
-    // Reusable method to forward requests to external services
-    private ResponseEntity<String> forwardRequest(String url, HttpMethod method, String requestBody) {
+    // Reusable method to forward requests to external services (now generic)
+    private <T> ResponseEntity<T> forwardRequest(String url, HttpMethod method, String requestBody, Class<T> responseType) {
         // Prepare the headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -38,29 +43,44 @@ public class GatewayController {
         // Wrap the request body and headers in an HttpEntity
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        // Forward the request using RestTemplate
-        return restTemplate.exchange(url, method, entity, String.class);
+        // Forward the request using RestTemplate and expect a response of type T
+        return restTemplate.exchange(url, method, entity, responseType);
     }
+
+    
 
     // Login - forward login data to RESTAPP
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password,
-            HttpSession session) {
-        String url = "http://localhost:8081/user/login";
+    public ResponseEntity<Map<String, Object>> login(@RequestParam String email, @RequestParam String password, HttpSession session) {
+        String url = "http://localhost:8080/login";
         String requestBody = "email=" + email + "&password=" + password;
 
-        // Forward the login request and get the response
-        ResponseEntity<String> response = forwardRequest(url, HttpMethod.POST, requestBody);
+        // Forward the login request and expect a UserDTO response
+        ResponseEntity<UserDTO> response = forwardRequest(url, HttpMethod.POST, requestBody, UserDTO.class);
 
         // If the login is successful, manage session data
-        if (response.getStatusCode() == HttpStatus.OK) {
-            session.setAttribute("email", email);
-            session.setAttribute("isAdmin", "User Admin"); // Dynamically set this from the response if needed
-            return ResponseEntity.ok(response.getBody());
+        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+            UserDTO user = response.getBody();
+
+            // Store user-related data in session (adjust as needed)
+            session.setAttribute("email", user.getEmail());
+            session.setAttribute("userId", user.getId());
+            session.setAttribute("isAdmin", user.getIsAdmin() ? "Admin" : "Client");
+
+            // Create a response body with both success message and user info
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("message", "Logged in as " + user.getEmail() + " with role " + (user.getIsAdmin() ? "Admin" : "Client"));
+            responseBody.put("user", user);  // Include the UserDTO object in the response
+
+            // Return a success response with user info
+            return ResponseEntity.ok(responseBody);
         } else {
-            return ResponseEntity.badRequest().body("Invalid credentials or server error.");
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", "Invalid credentials or server error.");
+            return ResponseEntity.badRequest().body(errorResponse);
         }
     }
+
 
     // Logout - invalidate session
     @PostMapping("/logout")
