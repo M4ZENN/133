@@ -132,7 +132,7 @@ public class GatewayController {
         }
     }
 
-    // Update cat information - forward to the Cat Service
+    // Update cat information - forward to the Cat Servicew
     @PutMapping("/updateCatInformation")
     public ResponseEntity<String> updateCatInformation(@RequestParam Integer id,
                                                        @RequestParam String name,
