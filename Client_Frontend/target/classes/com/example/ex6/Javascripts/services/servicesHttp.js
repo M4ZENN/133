@@ -13,11 +13,15 @@ class servicesHttp {
       });
   }
 
-  buyCat(catId,successCallback, errorCallback) {
+  buyCat(catId, buyerId, successCallback, errorCallback) {
     $.ajax({
-        type: "POST",
+        type: "PUT",
         dataType: "json",
-        url: this.BASE_URL + "gateway/updatePurchase/"+catId,
+        url: this.BASE_URL + "gateway/updatePurchase",
+        data: {
+            id: catId,
+            buyerId: buyerId
+        },
         success: successCallback,
         error: errorCallback
     });

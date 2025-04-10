@@ -46,20 +46,6 @@ class IndexCtrl {
             const image = cat.image || "https://via.placeholder.com/200x150?text=No+Image";
             $(catCard).find("img").attr("src", image).attr("alt", cat.name);
     
-            const buyButton = $(catCard).find(".btn-buy");
-
-            if (cat.isPurchased) {
-                buyButton.prop("disabled", true).text("Acheté");
-                $(catCard).addClass("purchased"); // Optional: style with CSS
-            } else {
-                buyButton.on("click", () => {
-                    this.http.purchaseCat(cat.id, () => {
-                        buyButton.prop("disabled", true).text("Acheté");
-                        $(catCard).addClass("purchased");
-                    }, this.callbackError);
-                });
-            }
-    
           
             // Append to list
             catsListContainer.append(catCard);
