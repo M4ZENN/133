@@ -48,8 +48,6 @@ public class Controller {
         }
     }
 
-
-
     // Logout
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpSession session) {
