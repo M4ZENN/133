@@ -1,7 +1,3 @@
 D:\133_Elif\133-main\133\API_Gateway\src\main\java\com\example\ex6\controller\GatewayController.java
-D:\133_Elif\133-main\133\API_Gateway\src\main\java\com\example\ex6\model\User.java
-D:\133_Elif\133-main\133\API_Gateway\src\main\java\com\example\ex6\controller\UserController.java
 D:\133_Elif\133-main\133\API_Gateway\src\main\java\com\example\ex6\dto\UserDTO.java
 D:\133_Elif\133-main\133\API_Gateway\src\main\java\com\example\ex6\Ex6Application.java
-D:\133_Elif\133-main\133\API_Gateway\src\main\java\com\example\ex6\repository\UserRepository.java
-D:\133_Elif\133-main\133\API_Gateway\src\main\java\com\example\ex6\service\UserService.java
