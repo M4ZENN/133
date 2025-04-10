@@ -12,28 +12,24 @@
  * @param {Object} jqXHR - The jQuery XMLHttpRequest object.
  */
 function connectSuccess(data, text, jqXHR) {
-    console.log("Login successful:", data);
-  
-    if ($(data).find("result").text() == 'true') {
-      alert("Login successful");
-  
-      var adminEmail = $(data).find("email").text().trim();
-      var adminId = $(data).find("pk_admin").text().trim();
-  
-      if (adminEmail && adminId) {
-        localStorage.setItem("adminEmail", adminEmail);
-        localStorage.setItem("adminId", adminId);
-      } else {
-        alert("Error retrieving admin details.");
-        return;
-      }
-  
-      // Redirect to admin.html
-      window.location.href = "admin.html";
-    } else {
-      alert("Login failed. Incorrect email or password.");
-    }
+  console.log("Login response:", data);
+
+  const user = data.user;
+
+  if (user && user.isAdmin === false) {
+    // Store client credentials
+    localStorage.setItem("clientEmail", user.email);
+    localStorage.setItem("clientId", user.id);
+
+    alert("Connexion réussie !");
+    window.location.href = "viewCat.html";
+  } else if (user && user.isAdmin === true) {
+    alert("Seuls les clients peuvent accéder à cette page.");
+  } else {
+    alert("Échec de la connexion : informations invalides.");
   }
+}
+
   
   /**
    * This function is called when the user logs out. It clears the session storage and
@@ -72,6 +68,7 @@ function connectSuccess(data, text, jqXHR) {
    * for the login and logout buttons and handles the actions when clicked.
    */
   $(document).ready(function () {
+    const service = new servicesHttp(); // 👈 create instance here
     var butConnect = $("#login-btn");
     var butDisconnect = $("#disconnect-btn");
   
@@ -82,12 +79,12 @@ function connectSuccess(data, text, jqXHR) {
       var password = $("#password").val();
       console.log("Sending email:", email, "and password:", password);
   
-      // Call the connect function to send login data to the server
-      connect(email, password, connectSuccess, CallbackError);
+      // ✅ Use the instance to call connect
+      service.connect(email, password, connectSuccess, CallbackError);
     });
   
     butDisconnect.click(function (event) {
-      // Call the disconnect function to log the user out
-      disconnect(disconnectSuccess, CallbackError);
+      service.disconnect(disconnectSuccess, CallbackError);
     });
   });
+  
