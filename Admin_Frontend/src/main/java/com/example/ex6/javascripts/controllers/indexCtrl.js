@@ -45,7 +45,6 @@ class IndexCtrl {
     
         data.forEach((cat) => {
             const catCard = templateCatCard.clone()[0]; // Clone template card
-            catCard.style.display = "block";
             $(catCard).removeClass("template-card");
     
             // Calculate age from birthdate
@@ -94,6 +93,10 @@ class IndexCtrl {
     
     deleteCatSuccess(data) {
         console.log("Cat deleted successfully", data);
+        // If your response now has a message property, you might want to show it
+        if (data && data.message) {
+            alert(data.message);
+        }
         // Refresh the cats list
         this.http.chargerCats(this.getCatsSuccess, this.callbackError);
     }
