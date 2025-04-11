@@ -177,22 +177,12 @@ public class GatewayController {
 
     @DeleteMapping(path = "/deleteCat")
     public ResponseEntity<String> deleteCat(@RequestParam Integer id) {
-<<<<<<< HEAD
         String url = "http://localhost:8082/deleteCat?id=" + id;
         
         // Debug log: Ensure the correct URL
         System.out.println("Forwarding to: " + url);
         
         ResponseEntity<String> response = forwardRequest(url, HttpMethod.DELETE, null, String.class);
-        
-=======
-        String url = "http://host.docker.internal:8082/deleteCat"; // URL of the delete cat endpoint
-        String requestBody = "id=" + id;
-
-        // Forward the request to the Cat Service
-        ResponseEntity<String> response = forwardRequest(url, HttpMethod.DELETE, requestBody, String.class);
-
->>>>>>> 319ffbf9e9e4a39208d9669ee9d7fedd1fda5951
         if (response.getStatusCode() == HttpStatus.OK) {
             return ResponseEntity.ok("Cat deleted successfully!");
         } else {
