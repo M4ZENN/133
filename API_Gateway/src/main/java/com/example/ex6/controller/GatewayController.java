@@ -176,17 +176,18 @@ public class GatewayController {
     }
 
     @DeleteMapping(path = "/deleteCat")
-    public ResponseEntity<String> deleteCat(@RequestParam Integer id) {
-        String url = "http://localhost:8082/deleteCat?id=" + id;
-        
-        // Debug log: Ensure the correct URL
-        System.out.println("Forwarding to: " + url);
-        
+    public ResponseEntity<Map<String, String>> deleteCat(@RequestParam Integer id) {
+        String url = "http://host.docker.internal:8082/deleteCat?id=" + id;
         ResponseEntity<String> response = forwardRequest(url, HttpMethod.DELETE, null, String.class);
+        
+        Map<String, String> responseBody = new HashMap<>();
+        
         if (response.getStatusCode() == HttpStatus.OK) {
-            return ResponseEntity.ok("Cat deleted successfully!");
+            responseBody.put("message", "Cat deleted successfully!");
+            return ResponseEntity.ok(responseBody);
         } else {
-            return ResponseEntity.badRequest().body("Failed to delete cat.");
+            responseBody.put("message", "Failed to delete cat.");
+            return ResponseEntity.badRequest().body(responseBody);
         }
     }
 
