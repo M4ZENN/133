@@ -193,7 +193,7 @@ public class GatewayController {
     // Get all breeds - forward to the Cat Service
     @GetMapping("/getBreeds")
     public ResponseEntity<String> getBreeds() {
-        String url = "http://localhost:8082/getAllBreeds"; // URL of the get all breeds endpoint
+        String url = "http://localhost:8082/getBreeds"; // URL of the get all breeds endpoint
 
         // Forward the GET request to the Cat Service
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
