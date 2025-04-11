@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.ex6.dto.CatDTO;
 import com.example.ex6.model.Breed;
 import com.example.ex6.model.Cat;
 import com.example.ex6.service.CatService;
@@ -97,7 +100,12 @@ public class CatController {
     }
 
     @GetMapping("/getCat")
-    public Cat getCatById(@RequestParam Integer id) {
-        return catService.getCat(id);
+    public ResponseEntity<CatDTO> getCat(@RequestParam Integer id) {
+        CatDTO catDTO = catService.getCat(id); // Service now returns CatDTO directly
+        if (catDTO != null) {
+            return ResponseEntity.ok(catDTO);
+        } else {
+            return ResponseEntity.badRequest().body(null); // Or provide a custom error message
+        }
     }
 }
