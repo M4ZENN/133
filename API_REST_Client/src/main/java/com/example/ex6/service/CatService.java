@@ -124,4 +124,8 @@ public class CatService {
     public Iterable<Breed> findAllBreeds() {
         return breedRepository.findAll();
     }
+
+    public Cat getCat(Integer id) {
+        return catRepository.findById(id).orElse(null);
+    }
 }

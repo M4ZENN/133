@@ -26,8 +26,6 @@ class IndexCtrl {
             // this.http.logout(this.logoutSuccess, this.callbackError);
             window.location.href = "login.html"; // Redirect to login page
         });
-
-        // Dynamic event listeners will be added for modify and delete buttons when the cats are loaded
     }
 
     /**
@@ -74,7 +72,7 @@ class IndexCtrl {
             // Add click handlers for the modify and delete buttons
             $(catCard).find(".modify-cat").on("click", (e) => {
                 const catId = $(e.currentTarget).attr("data-id");
-                window.location.href = `modify.html?id=${catId}`;
+                window.location.href = `modifyCat.html?id=${catId}`;
             });
             
             $(catCard).find(".delete-cat").on("click", (e) => {
