@@ -47,7 +47,7 @@ function connectSuccess(data, text, jqXHR) {
     localStorage.removeItem("adminId");
   
     // Redirect to index.html after logout
-    window.location.href = "index.html";
+    window.location.href = "login.html";
   }
   
   /**
@@ -70,7 +70,7 @@ function connectSuccess(data, text, jqXHR) {
   $(document).ready(function () {
     const service = new servicesHttp(); // 👈 create instance here
     var butConnect = $("#login-btn");
-    var butDisconnect = $("#disconnect-btn");
+    var butDisconnect = $("#logout-btn");
   
     butConnect.click(function (event) {
       event.preventDefault();  // Prevent the form from submitting normally

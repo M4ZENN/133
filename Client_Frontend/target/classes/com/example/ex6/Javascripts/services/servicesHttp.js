@@ -38,7 +38,7 @@ class servicesHttp {
     $.ajax({
       type: "POST",
       dataType: "json",
-      url: this.BASE_URL + + "gateway/login",
+      url: this.BASE_URL + "gateway/login",
       data: {
         action: 'connect',
         email: email,
