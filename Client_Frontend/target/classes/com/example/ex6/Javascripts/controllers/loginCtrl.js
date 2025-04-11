@@ -69,6 +69,7 @@ function connectSuccess(data, text, jqXHR) {
     const service = new servicesHttp(); // 👈 create instance here
     var butConnect = $("#login-btn");
     var butDisconnect = $("#logout-btn");
+<<<<<<< HEAD
 
 
 
@@ -89,3 +90,22 @@ function connectSuccess(data, text, jqXHR) {
         service.disconnect(disconnectSuccess, CallbackError);
     });
 });
+=======
+  
+    butConnect.click(function (event) {
+      event.preventDefault();  // Prevent the form from submitting normally
+  
+      var email = $("#email").val();
+      var password = $("#password").val();
+      console.log("Sending email:", email, "and password:", password);
+  
+      // ✅ Use the instance to call connect
+      service.connect(email, password, connectSuccess, CallbackError);
+    });
+  
+    butDisconnect.click(function (event) {
+      service.disconnect(disconnectSuccess, CallbackError);
+    });
+  });
+  
+>>>>>>> 71f91e675c786bd17b56220d7a87981ba21ddfdd
