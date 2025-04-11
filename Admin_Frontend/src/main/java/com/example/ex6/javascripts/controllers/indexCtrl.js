@@ -3,13 +3,31 @@ class IndexCtrl {
         this.http = new servicesHttp();
         this.callbackError = this.callbackError.bind(this);
         this.getCatsSuccess = this.getCatsSuccess.bind(this);
-
+        this.deleteCatSuccess = this.deleteCatSuccess.bind(this);
+        
         this.init();
+        this.setupEventListeners();
     }
 
     init() {
         // Fetch and display the cats when the page loads
         this.http.chargerCats(this.getCatsSuccess, this.callbackError);
+    }
+
+    setupEventListeners() {
+        // Add cat button event listener
+        $("#add-cat-btn").on("click", () => {
+            window.location.href = "add.html";
+        });
+
+        // Logout button event listener
+        $("#logout-btn").on("click", () => {
+            // Could implement actual logout request here
+            // this.http.logout(this.logoutSuccess, this.callbackError);
+            window.location.href = "index.html"; // Redirect to login page
+        });
+
+        // Dynamic event listeners will be added for modify and delete buttons when the cats are loaded
     }
 
     /**
@@ -21,10 +39,14 @@ class IndexCtrl {
     
         const catsListContainer = $("#cats-list");
         const templateCatCard = $(".cat-card.template-card");
+        
+        // Clear existing cats (except the template)
+        catsListContainer.find(".cat-card:not(.template-card)").remove();
     
-        data.forEach(function(cat) {
+        data.forEach((cat) => {
             const catCard = templateCatCard.clone()[0]; // Clone template card
             catCard.style.display = "block";
+            $(catCard).removeClass("template-card");
     
             // Calculate age from birthdate
             const birthDate = new Date(cat.birthdate);
@@ -46,7 +68,23 @@ class IndexCtrl {
             const image = cat.image || "https://via.placeholder.com/200x150?text=No+Image";
             $(catCard).find("img").attr("src", image).attr("alt", cat.name);
     
-          
+            // Set the cat ID to the data-id attributes of the buttons
+            $(catCard).find(".modify-cat").attr("data-id", cat.id);
+            $(catCard).find(".delete-cat").attr("data-id", cat.id);
+            
+            // Add click handlers for the modify and delete buttons
+            $(catCard).find(".modify-cat").on("click", (e) => {
+                const catId = $(e.currentTarget).attr("data-id");
+                window.location.href = `modify.html?id=${catId}`;
+            });
+            
+            $(catCard).find(".delete-cat").on("click", (e) => {
+                const catId = $(e.currentTarget).attr("data-id");
+                if (confirm("Êtes-vous sûr de vouloir supprimer ce chat ?")) {
+                    this.http.deleteCat(catId, null, this.deleteCatSuccess, this.callbackError);
+                }
+            });
+            
             // Append to list
             catsListContainer.append(catCard);
         });
@@ -54,11 +92,16 @@ class IndexCtrl {
         console.log("Cats loaded and displayed successfully");
     }
     
+    deleteCatSuccess(data) {
+        console.log("Cat deleted successfully", data);
+        // Refresh the cats list
+        this.http.chargerCats(this.getCatsSuccess, this.callbackError);
+    }
 
     callbackError(request, status, error) {
         // Handle errors when loading cats
-        console.error("Error loading cats: " + error);
-        alert("Error loading cats: " + error);  // You can replace this with any other method of error handling
+        console.error("Error: " + error);
+        alert("Error: " + error);
     }
 }
 

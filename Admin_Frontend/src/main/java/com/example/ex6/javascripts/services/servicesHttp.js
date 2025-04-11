@@ -13,21 +13,74 @@ class servicesHttp {
         });
     }
   
-    addCat(catId, buyerId, successCallback, errorCallback) {
-      $.ajax({
-          type: "PUT",
-          dataType: "json",
-          url: this.BASE_URL + "gateway/addCat",
-          data: {
-              name: name,
-              birthdate: birthdate,
-              breedId: breedId,
-              funFact: funFact,
-              description: description
-          },
-          success: successCallback,
-          error: errorCallback
-      });
-  }
-  }
-  
+    addCat(name, birthdate, breedId, funFact, description, successCallback, errorCallback) {
+        $.ajax({
+            type: "PUT",
+            dataType: "json",
+            url: this.BASE_URL + "gateway/addCat",
+            data: {
+                name: name,
+                birthdate: birthdate,
+                breedId: breedId,
+                funFact: funFact,
+                description: description
+            },
+            success: successCallback,
+            error: errorCallback
+        });
+    }
+
+    modifyCat(catId, name, birthdate, breedId, funFact, description, successCallback, errorCallback) {
+        $.ajax({
+            type: "PUT",
+            dataType: "json",
+            url: this.BASE_URL + "gateway/modifyCat",
+            data: {
+                catId: catId,
+                name: name,
+                birthdate: birthdate,
+                breedId: breedId,
+                funFact: funFact,
+                description: description
+            },
+            success: successCallback,
+            error: errorCallback
+        });
+    }
+
+    deleteCat(catId, successCallback, errorCallback) {
+        $.ajax({
+            type: "DELETE", // Changed to DELETE for proper REST convention
+            dataType: "json",
+            url: this.BASE_URL + "gateway/deleteCat",
+            data: {
+                catId: catId
+            },
+            success: successCallback,
+            error: errorCallback
+        });
+    }
+    
+    getBreeds(successCallback, errorCallback) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: this.BASE_URL + "gateway/getBreeds",
+            success: successCallback,
+            error: errorCallback
+        });
+    }
+
+    getCat(catId, successCallback, errorCallback) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: this.BASE_URL + "gateway/getCat",
+            data: {
+                catId: catId
+            },
+            success: successCallback,
+            error: errorCallback
+        });
+    }
+}

@@ -105,7 +105,6 @@ public class GatewayController {
     @PostMapping("/addCat")
     public ResponseEntity<String> addCat(@RequestParam String name,
                                          @RequestParam String birthdate,
-                                         @RequestParam Integer buyerId,
                                          @RequestParam Integer breedId,
                                          @RequestParam String funFact,
                                          @RequestParam String description,
@@ -114,7 +113,7 @@ public class GatewayController {
 
         // Constructing the request body based on new parameters
         String requestBody = "name=" + name + "&birthdate=" + birthdate +
-                             "&buyerId=" + buyerId + "&breedId=" + breedId +
+                             "&buyerId=" + 0 + "&breedId=" + breedId +
                              "&funFact=" + funFact + "&description=" + description;
 
         // Optionally add isPurchased to the request body if it's provided
