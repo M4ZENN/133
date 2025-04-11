@@ -49,7 +49,7 @@ public class Controller {
     }
 
     // Logout
-    @PostMapping("/logout")
+    @PostMapping("/logout") 
     public ResponseEntity<String> logout(HttpSession session) {
         session.invalidate();
         return ResponseEntity.ok("Session destroyed, user logged out!");
