@@ -175,15 +175,15 @@ public class GatewayController {
         }
     }
 
-    // Delete a cat - forward to the Cat Service
-    @DeleteMapping("/deleteCat")
+    @DeleteMapping(path = "/deleteCat")
     public ResponseEntity<String> deleteCat(@RequestParam Integer id) {
-        String url = "http://localhost:8082/deleteCat"; // URL of the delete cat endpoint
-        String requestBody = "id=" + id;
-
-        // Forward the request to the Cat Service
-        ResponseEntity<String> response = forwardRequest(url, HttpMethod.DELETE, requestBody, String.class);
-
+        String url = "http://localhost:8082/deleteCat?id=" + id;
+        
+        // Debug log: Ensure the correct URL
+        System.out.println("Forwarding to: " + url);
+        
+        ResponseEntity<String> response = forwardRequest(url, HttpMethod.DELETE, null, String.class);
+        
         if (response.getStatusCode() == HttpStatus.OK) {
             return ResponseEntity.ok("Cat deleted successfully!");
         } else {
@@ -191,6 +191,7 @@ public class GatewayController {
         }
     }
 
+    
     // Get all breeds - forward to the Cat Service
     @GetMapping("/getBreeds")
     public ResponseEntity<String> getBreeds() {

@@ -50,12 +50,9 @@ class servicesHttp {
 
     deleteCat(catId, successCallback, errorCallback) {
         $.ajax({
-            type: "DELETE", // Changed to DELETE for proper REST convention
+            type: "DELETE",
             dataType: "json",
-            url: this.BASE_URL + "gateway/deleteCat",
-            data: {
-                catId: catId
-            },
+            url: this.BASE_URL + "gateway/deleteCat?id=" + catId,
             success: successCallback,
             error: errorCallback
         });
