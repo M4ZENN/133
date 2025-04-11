@@ -50,7 +50,7 @@ class IndexCtrl {
     
             // BUY ACTION
             const buyBtn = $(catCard).find(".btn-buy");
-            if (cat.buyerId) {
+            if (cat.isPurchased === 1 || cat.isPurchased === true) {
                 buyBtn.prop("disabled", true).text("Déjà acheté");
             } else {
                 buyBtn.on("click", () => this.handleBuy(cat.id, catCard));  // Arrow function here
