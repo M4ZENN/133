@@ -4,12 +4,16 @@ class IndexCtrl {
         this.callbackError = this.callbackError.bind(this);
         this.getCatsSuccess = this.getCatsSuccess.bind(this);
         this.handleBuy = this.handleBuy.bind(this);  // Bind handleBuy here
-
-
         this.init();
     }
 
     init() {
+        // **Check if the user is logged in before loading the cats**
+        if (!localStorage.getItem("clientEmail") || !localStorage.getItem("clientId")) {
+            window.location.href = "login.html"; // Redirect to login if not logged in
+            return;
+        }
+
         // Fetch and display the cats when the page loads
         this.http.chargerCats(this.getCatsSuccess, this.callbackError);
     }

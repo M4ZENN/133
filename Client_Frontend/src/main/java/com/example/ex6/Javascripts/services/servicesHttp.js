@@ -57,14 +57,20 @@ class servicesHttp {
    * @param {function} successCallback - Called on success.
    * @param {function} errorCallback - Called on error.
    */
-   disconnect(successCallback, errorCallback) {
+  disconnect(successCallback, errorCallback) {
     $.ajax({
-      type: "POST",
-      dataType: "json",
-      url:this.BASE_URL + "gateway/logout",
-      data: 'action=disconnect',
-      success: successCallback,
-      error: errorCallback
+        type: "POST",
+        dataType: "json",
+        url: this.BASE_URL + "gateway/logout",
+        data: 'action=disconnect',
+        success: (data) => {
+            successCallback(data);
+            // Clear session storage and redirect to login.html
+            localStorage.clear();  // Clear client credentials
+            window.location.href = "login.html";  // Redirect to login
+        },
+        error: errorCallback
     });
-  }
+}
+
 }
