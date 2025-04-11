@@ -20,14 +20,14 @@ class IndexCtrl {
      */
     getCatsSuccess(data) {
         console.log("getCatsSuccess called", data);
-    
+
         const catsListContainer = $("#cats-list");
         const templateCatCard = $(".cat-card.template-card");
-    
+
         data.forEach((cat) => {  // Arrow function here
             const catCard = templateCatCard.clone()[0]; // Clone template card
             catCard.style.display = "block";
-    
+
             // Calculate age from birthdate
             const birthDate = new Date(cat.birthdate);
             const today = new Date();
@@ -36,18 +36,18 @@ class IndexCtrl {
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
                 age--;
             }
-    
+
             // Fill in cat data
             $(catCard).find(".cat-header").text(cat.name);
             $(catCard).find(".cat-info .info-field p").eq(0).text(`${age} ans`);
             $(catCard).find(".cat-info .info-field p").eq(1).text(cat.breed.name.trim());
             $(catCard).find(".cat-info .info-field p").eq(2).text(cat.funFact);
             $(catCard).find(".cat-info .info-field p").eq(3).text(cat.description.trim());
-    
+
             // Set image or fallback
-            const image = cat.image || "https://via.placeholder.com/200x150?text=No+Image";
+            const image = cat.image || "https://coin-images.coingecko.com/coins/images/52603/large/OIALogo.jpg?1733756422"
             $(catCard).find("img").attr("src", image).attr("alt", cat.name);
-    
+
             // BUY ACTION
             const buyBtn = $(catCard).find(".btn-buy");
             if (cat.isPurchased === 1 || cat.isPurchased === true) {
@@ -55,17 +55,17 @@ class IndexCtrl {
             } else {
                 buyBtn.on("click", () => this.handleBuy(cat.id, catCard));  // Arrow function here
             }
-    
+
             // Append to list
             catsListContainer.append(catCard);
         });
-    
+
         console.log("Cats loaded and displayed successfully");
     }
-    
-    
 
-  handleBuy(catId, catCard) {
+
+
+    handleBuy(catId, catCard) {
         const buyerId = localStorage.getItem("clientId");
         if (!buyerId) {
             alert("Vous devez être connecté pour acheter un chat.");
