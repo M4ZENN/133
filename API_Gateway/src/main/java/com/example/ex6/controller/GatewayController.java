@@ -35,7 +35,8 @@ public class GatewayController {
     }
 
     // Reusable method to forward requests to external services (now generic)
-    private <T> ResponseEntity<T> forwardRequest(String url, HttpMethod method, String requestBody, Class<T> responseType) {
+    private <T> ResponseEntity<T> forwardRequest(String url, HttpMethod method, String requestBody,
+            Class<T> responseType) {
         // Prepare the headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -49,7 +50,8 @@ public class GatewayController {
 
     // Login - forward login data to RESTAPP
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestParam String email, @RequestParam String password, HttpSession session) {
+    public ResponseEntity<Map<String, Object>> login(@RequestParam String email, @RequestParam String password,
+            HttpSession session) {
         String url = "http://host.docker.internal:8081/login";
         String requestBody = "email=" + email + "&password=" + password;
 
@@ -67,8 +69,9 @@ public class GatewayController {
 
             // Create a response body with both success message and user info
             Map<String, Object> responseBody = new HashMap<>();
-            responseBody.put("message", "Logged in as " + user.getEmail() + " with role " + (user.getIsAdmin() ? "Admin" : "Client"));
-            responseBody.put("user", user);  // Include the UserDTO object in the response
+            responseBody.put("message",
+                    "Logged in as " + user.getEmail() + " with role " + (user.getIsAdmin() ? "Admin" : "Client"));
+            responseBody.put("user", user); // Include the UserDTO object in the response
 
             // Return a success response with user info
             return ResponseEntity.ok(responseBody);
@@ -106,17 +109,17 @@ public class GatewayController {
     /// Add a new cat - forward to the Cat Service
     @PostMapping("/addCat")
     public ResponseEntity<String> addCat(@RequestParam String name,
-                                        @RequestParam String birthdate,
-                                        @RequestParam Integer breedId,
-                                        @RequestParam String funFact,
-                                        @RequestParam String description,
-                                        @RequestParam(required = false) Boolean isPurchased) {
+            @RequestParam String birthdate,
+            @RequestParam Integer breedId,
+            @RequestParam String funFact,
+            @RequestParam String description,
+            @RequestParam(required = false) Boolean isPurchased) {
         String url = "http://host.docker.internal:8082/addCat"; // Replace with the actual URL of the cat API
 
         // Constructing the request body based on new parameters
         String requestBody = "name=" + name + "&birthdate=" + birthdate +
-                            "&buyerId=" + 0 + "&breedId=" + breedId +
-                            "&funFact=" + funFact + "&description=" + description;
+                "&buyerId=" + 0 + "&breedId=" + breedId +
+                "&funFact=" + funFact + "&description=" + description;
 
         // Optionally add isPurchased to the request body if it's provided
         if (isPurchased != null) {
@@ -137,16 +140,17 @@ public class GatewayController {
     // Update cat information - forward to the Cat Service
     @PutMapping("/updateCatInformation")
     public ResponseEntity<String> updateCatInformation(@RequestParam Integer id,
-                                                       @RequestParam String name,
-                                                       @RequestParam String birthdate,
-                                                       @RequestParam Integer buyerId,
-                                                       @RequestParam Integer breedId,
-                                                       @RequestParam String funFact,
-                                                       @RequestParam String description) {
-        String url = "http://host.docker.internal:8082/updateCatInformation"; // URL of the update cat information endpoint
+            @RequestParam String name,
+            @RequestParam String birthdate,
+            @RequestParam Integer buyerId,
+            @RequestParam Integer breedId,
+            @RequestParam String funFact,
+            @RequestParam String description) {
+        String url = "http://host.docker.internal:8082/updateCatInformation"; // URL of the update cat information
+                                                                              // endpoint
         String requestBody = "id=" + id + "&name=" + name + "&birthdate=" + birthdate +
-                             "&buyerId=" + buyerId + "&breedId=" + breedId +
-                             "&funFact=" + funFact + "&description=" + description;
+                "&buyerId=" + buyerId + "&breedId=" + breedId +
+                "&funFact=" + funFact + "&description=" + description;
 
         // Forward the request to the Cat Service
         ResponseEntity<String> response = forwardRequest(url, HttpMethod.PUT, requestBody, String.class);
@@ -160,18 +164,26 @@ public class GatewayController {
 
     // Update purchase status - forward to the Cat Service
     @PutMapping("/updatePurchase")
-    public ResponseEntity<String> updatePurchase(@RequestParam Integer id,
-                                                 @RequestParam Integer buyerId) {
+    public ResponseEntity<Map<String, String>> updatePurchase(@RequestParam Integer id,
+            @RequestParam Integer buyerId) {
         String url = "http://host.docker.internal:8082/updatePurshase"; // URL of the update purchase endpoint
         String requestBody = "id=" + id + "&buyerId=" + buyerId;
 
         // Forward the request to the Cat Service
         ResponseEntity<String> response = forwardRequest(url, HttpMethod.PUT, requestBody, String.class);
 
+        Map<String, String> responseBody = new HashMap<>();
+
         if (response.getStatusCode() == HttpStatus.OK) {
-            return ResponseEntity.ok("Cat purchase updated successfully!");
+            responseBody.put("message", "Cat purchased successfully!");
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(responseBody);
         } else {
-            return ResponseEntity.badRequest().body("Failed to update cat purchase.");
+            responseBody.put("message", "Failed to update cat purchase.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(responseBody);
         }
     }
 
@@ -179,9 +191,9 @@ public class GatewayController {
     public ResponseEntity<Map<String, String>> deleteCat(@RequestParam Integer id) {
         String url = "http://host.docker.internal:8082/deleteCat?id=" + id;
         ResponseEntity<String> response = forwardRequest(url, HttpMethod.DELETE, null, String.class);
-        
+
         Map<String, String> responseBody = new HashMap<>();
-        
+
         if (response.getStatusCode() == HttpStatus.OK) {
             responseBody.put("message", "Cat deleted successfully!");
             return ResponseEntity.ok(responseBody);
@@ -191,7 +203,6 @@ public class GatewayController {
         }
     }
 
-    
     // Get all breeds - forward to the Cat Service
     @GetMapping("/getBreeds")
     public ResponseEntity<String> getBreeds() {
