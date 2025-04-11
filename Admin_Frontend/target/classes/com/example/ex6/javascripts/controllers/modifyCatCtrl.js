@@ -139,14 +139,13 @@ class ModifyCatCtrl {
             alert("Veuillez remplir tous les champs obligatoires");
             return false;
         }
-        
         return true;
     }
 
     modifyCatSuccess(data) {
         console.log("Cat modified successfully:", data);
         alert("Le chat a été modifié avec succès!");
-        window.location.href = "index.html";
+        window.location.href = "viewCat.html";
     }
 
     callbackError(request, status, error) {
