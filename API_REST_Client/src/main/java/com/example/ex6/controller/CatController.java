@@ -97,13 +97,7 @@ public class CatController {
     }
 
     @GetMapping("/getCat")
-    public ResponseEntity<Cat> getCatById(@RequestParam Integer id) {
-        Cat cat = catService.getCat(id);
-        
-        if (cat == null) {
-            return ResponseEntity.notFound().build();
-        }
-        
-        return ResponseEntity.ok(cat);
+    public Cat getCatById(@RequestParam Integer id) {
+        return catService.getCat(id);
     }
 }
