@@ -209,7 +209,7 @@ public class GatewayController {
 
     @GetMapping("/getCat")
     public ResponseEntity<String> getCat(@RequestParam Integer id) {
-        String url = "http://host.docker.internal:8082/getCat?id=" + id; // URL of the get all breeds endpoint
+        String url = "http://host.docker.internal:8082/getCat?id=" + id; 
 
         // Forward the GET request to the Cat Service
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);

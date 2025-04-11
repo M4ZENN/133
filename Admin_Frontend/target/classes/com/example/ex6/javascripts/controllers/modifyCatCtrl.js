@@ -17,7 +17,6 @@ class ModifyCatCtrl {
         // Load the cat data using the ID from URL
         if (this.catId) {
             this.http.getCat(this.catId, this.getCatSuccess, this.callbackError);
-            // Also load the breeds for the dropdown
             this.http.getBreeds(this.getBreedsSuccess, this.callbackError);
         } else {
             alert("Identifiant du chat manquant dans l'URL");
