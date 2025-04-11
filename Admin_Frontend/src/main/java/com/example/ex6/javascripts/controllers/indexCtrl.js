@@ -62,8 +62,7 @@ class IndexCtrl {
             $(catCard).find(".cat-info .info-field p").eq(3).text(cat.description.trim());
     
             // Set image or fallback
-            const image = cat.image || "https://scalebranding.com/_next/image?url=https%3A%2F%2Fimages.scalebranding.com%2Fcat-and-fish-logo-bad17591-0047-4c46-a313-9781029fb316.jpg&w=256&q=75";
-            $(catCard).find("img").attr("src", image).attr("alt", cat.name);
+x
     
             // Set the cat ID to the data-id attributes of the buttons
             $(catCard).find(".modify-cat").attr("data-id", cat.id);

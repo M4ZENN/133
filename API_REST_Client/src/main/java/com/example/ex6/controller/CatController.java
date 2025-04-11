@@ -50,7 +50,6 @@ public class CatController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response); // Return not found if cat doesn't exist
         }
     }
-    
 
     // Handler to add a new cat
     @PostMapping(path = "/addCat")

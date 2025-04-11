@@ -48,14 +48,14 @@ class loginCtrl {
 
         const user = data.user;
 
-        if (user && user.isAdmin === false) {
+        if (user && user.isAdmin === true) {
             // Store client credentials in localStorage
             localStorage.setItem("clientEmail", user.email);
             localStorage.setItem("clientId", user.id);
 
             alert("Connexion réussie !");
             window.location.href = "viewCat.html";
-        } else if (user && user.isAdmin === true) {
+        } else if (user && user.isAdmin === false) {
             alert("Seuls les administrateur peuvent accéder à cette page.");
         } else {
             alert("Échec de la connexion : informations invalides.");
