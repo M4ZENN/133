@@ -2,6 +2,7 @@ com\example\ex6\controller\CatController.class
 com\example\ex6\Ex6Application.class
 com\example\ex6\model\Cat.class
 com\example\ex6\service\CatService.class
+com\example\ex6\dto\BreedDTO.class
 com\example\ex6\model\Breed.class
 com\example\ex6\repository\CatRepository.class
 com\example\ex6\repository\BreedRepository.class

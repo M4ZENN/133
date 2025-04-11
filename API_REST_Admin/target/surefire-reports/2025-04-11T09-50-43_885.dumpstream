@@ -1,0 +1,5 @@
+# Created at 2025-04-11T09:50:44.042
+Boot Manifest-JAR contains absolute paths in classpath 'D:\133_Mazen\133_API_REST_Client\133\API_REST_Admin\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+
