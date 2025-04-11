@@ -95,4 +95,15 @@ public class CatController {
     public Iterable<Breed> getAllBreeds() {
         return catService.findAllBreeds();
     }
+
+    @GetMapping("/getCat")
+    public ResponseEntity<Cat> getCatById(@RequestParam Integer id) {
+        Cat cat = catService.getCat(id);
+        
+        if (cat == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        return ResponseEntity.ok(cat);
+    }
 }
