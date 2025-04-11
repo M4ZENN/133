@@ -65,10 +65,8 @@ class ModifyCatCtrl {
         const formattedDate = birthdate.toISOString().split('T')[0];
         $("#add-cat-birthdate").val(formattedDate);
         
-        // The breed dropdown will be populated in getBreedsSuccess, 
-        // but we need to remember which one to select
-        this.catBreedId = data.breed.id;
-        
+        // Store breed ID and other form values
+        this.catBreedId = data.breed.id; // Store breed ID
         $("#add-cat-funfact").val(data.funFact);
         $("#add-cat-description").val(data.description);
         
@@ -79,8 +77,11 @@ class ModifyCatCtrl {
         
         // Update page title
         $(".cat-header").text("Modifier le chat: " + data.name);
+    
+        // Fetch the breeds and update the dropdown
+        this.http.getBreeds(this.getBreedsSuccess, this.callbackError);
     }
-
+    
     getBreedsSuccess(data) {
         console.log("Breeds loaded successfully:", data);
         const dropdown = $("#add-cat-breed");
@@ -93,15 +94,13 @@ class ModifyCatCtrl {
             const option = $("<option></option>")
                 .attr("value", breed.id)
                 .text(breed.name);
-                
-            // If this is the cat's current breed, select it
-            if (breed.id === this.catBreedId) {
-                option.attr("selected", "selected");
-            }
             
             dropdown.append(option);
         });
-    }
+        
+        // After populating the options, select the cat's breed by its ID
+        dropdown.val(this.catBreedId); // Set the selected breed
+    }    
 
     submitForm() {
         // Validate the form
