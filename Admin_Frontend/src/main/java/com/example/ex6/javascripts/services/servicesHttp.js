@@ -33,16 +33,16 @@ class servicesHttp {
     modifyCat(catId, name, birthdate, breedId, funFact, description, successCallback, errorCallback) {
         $.ajax({
             type: "PUT",
-            dataType: "json",
-            url: this.BASE_URL + "gateway/modifyCat",
-            data: {
-                catId: catId,
-                name: name,
-                birthdate: birthdate,
-                breedId: breedId,
-                funFact: funFact,
-                description: description
-            },
+            dataType: "text",
+            url: this.BASE_URL + "gateway/updateCatInformation" + 
+                 "?id=" + encodeURIComponent(catId) +
+                 "&name=" + encodeURIComponent(name) + 
+                 "&birthdate=" + encodeURIComponent(birthdate) + 
+                 "&breedId=" + encodeURIComponent(breedId) + 
+                 "&funFact=" + encodeURIComponent(funFact) + 
+                 "&description=" + encodeURIComponent(description) +
+                 "&buyerId=0", // Ajoutez une valeur par défaut pour buyerId
+            data: {},
             success: successCallback,
             error: errorCallback
         });

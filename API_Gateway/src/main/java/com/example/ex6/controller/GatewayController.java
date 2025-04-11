@@ -67,6 +67,9 @@ public class GatewayController {
         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
             UserDTO user = response.getBody();
 
+            System.out.println("Forwarding login request to: " + url);
+            System.out.println("Request body: " + requestBody);
+
             // Store user-related data in session (adjust as needed)
             session.setAttribute("email", user.getEmail());
             session.setAttribute("userId", user.getId());
@@ -143,7 +146,7 @@ public class GatewayController {
     }
 
     // Update cat information - forward to the Cat Service
-    @PutMapping("/modifyCat")
+    @PutMapping("/updateCatInformation")
     public ResponseEntity<String> updateCatInformation(@RequestParam Integer id,
             @RequestParam String name,
             @RequestParam String birthdate,
