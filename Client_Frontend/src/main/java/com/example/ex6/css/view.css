@@ -4,14 +4,14 @@
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
+ 
 body {
     background-color: #f9f4ef;
     min-height: 100vh;
     padding: 20px;
     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4b8a5' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
-
+ 
 .header {
     display: flex;
     justify-content: space-between;
@@ -22,12 +22,12 @@ body {
     border-radius: 15px;
     box-shadow: 0 4px 12px rgba(149, 157, 165, 0.1);
 }
-
+ 
 .logo-section {
     display: flex;
     align-items: center;
 }
-
+ 
 .cat-icon {
     width: 45px;
     height: 45px;
@@ -38,12 +38,18 @@ body {
     align-items: center;
     margin-right: 15px;
 }
-
+ 
 h1 {
     color: #5e4b56;
     font-size: 24px;
 }
-
+ 
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+ 
 .btn {
     padding: 10px 15px;
     border-radius: 8px;
@@ -55,108 +61,115 @@ h1 {
     align-items: center;
     gap: 5px;
 }
-
+ 
 .btn-primary {
     background-color: #f5aa7a;
     color: white;
 }
-
+ 
 .btn-primary:hover {
     background-color: #e89b68;
 }
-
+ 
 .btn-logout {
     background-color: #5e4b56;
     color: white;
 }
-
+ 
 .btn-logout:hover {
     background-color: #4d3c45;
 }
-
+ 
+.cats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+}
+ 
+.cat-card {
+    background-color: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(149, 157, 165, 0.2);
+    transition: transform 0.3s;
+}
+ 
+.cat-card:hover {
+    transform: translateY(-5px);
+}
+ 
+.cat-header {
+    padding: 15px;
+    background-color: #5e4b56;
+    color: white;
+    font-weight: 600;
+    font-size: 18px;
+}
+ 
+.cat-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+ 
+.cat-info {
+    padding: 20px;
+}
+ 
+.info-field {
+    margin-bottom: 15px;
+}
+ 
+.info-field label {
+    display: block;
+    font-weight: 500;
+    color: #5e4b56;
+    margin-bottom: 5px;
+}
+ 
+.info-field p {
+    background-color: #f9f4ef;
+    padding: 10px;
+    border-radius: 6px;
+    color: #3a3a3a;
+}
+ 
+.cat-actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px 20px;
+}
+ 
 .loading {
     text-align: center;
     padding: 40px;
     font-size: 18px;
     color: #5e4b56;
 }
-
-.cats-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 20px;
-}
-
-.cat-card {
+ 
+.no-cats {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+    color: #5e4b56;
     background-color: white;
     border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(149, 157, 165, 0.2);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    box-shadow: 0 8px 24px rgba(149, 157, 165, 0.2);
 }
-
-.cat-header {
-    background-color: #f5aa7a;
-    color: white;
-    padding: 10px 15px;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.cat-image {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-}
-
-.cat-info {
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.info-field label {
-    font-weight: bold;
-    color: #5e4b56;
-}
-
-.info-field p {
-    margin-left: 10px;
-    color: #333;
-}
-
-.cat-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    padding: 15px;
-    border-top: 1px solid #eee;
-}
-
-.btn-buy {
-    background-color: #e5e5e5;
-    color: #333;
-}
-
-.btn-buy:hover {
-    background-color: #d4d4d4;
-}
-
-/* Responsive */
+ 
+/* Pour les écrans mobiles */
 @media (max-width: 768px) {
     .header {
         flex-direction: column;
         gap: 15px;
         text-align: center;
     }
-
+ 
     .logo-section {
         justify-content: center;
     }
+ 
     .action-buttons {
-        justify-content:right;
+        justify-content: center;
     }
-    
 }

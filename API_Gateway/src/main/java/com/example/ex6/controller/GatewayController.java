@@ -81,9 +81,11 @@ public class GatewayController {
 
     // Logout - invalidate session
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpSession session) {
-        session.invalidate(); // Destroy session
-        return ResponseEntity.ok("Session destroyed, user logged out!");
+    public ResponseEntity<Map<String, String>> logout(HttpSession session) {
+        session.invalidate();
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Session destroyed, user logged out!");
+        return ResponseEntity.ok(response);
     }
 
     // Get all cats - forward to the Cat Service
