@@ -74,7 +74,7 @@ class servicesHttp {
             dataType: "json",
             url: this.BASE_URL + "gateway/getCat",
             data: {
-                catId: catId
+                id: catId
             },
             success: successCallback,
             error: errorCallback
