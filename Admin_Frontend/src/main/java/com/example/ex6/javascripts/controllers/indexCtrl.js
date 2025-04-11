@@ -17,14 +17,14 @@ class IndexCtrl {
     setupEventListeners() {
         // Add cat button event listener
         $("#add-cat-btn").on("click", () => {
-            window.location.href = "add.html";
+            window.location.href = "addCat.html";
         });
 
         // Logout button event listener
         $("#logout-btn").on("click", () => {
             // Could implement actual logout request here
             // this.http.logout(this.logoutSuccess, this.callbackError);
-            window.location.href = "index.html"; // Redirect to login page
+            window.location.href = "login.html"; // Redirect to login page
         });
 
         // Dynamic event listeners will be added for modify and delete buttons when the cats are loaded

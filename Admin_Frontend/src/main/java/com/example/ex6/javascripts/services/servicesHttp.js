@@ -15,7 +15,7 @@ class servicesHttp {
   
     addCat(name, birthdate, breedId, funFact, description, successCallback, errorCallback) {
         $.ajax({
-            type: "PUT",
+            type: "POST",
             dataType: "json",
             url: this.BASE_URL + "gateway/addCat",
             data: {

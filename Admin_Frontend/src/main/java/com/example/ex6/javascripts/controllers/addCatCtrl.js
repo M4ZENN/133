@@ -53,7 +53,7 @@ class AddCatCtrl {
     setupEventListeners() {
         // Back and cancel buttons event listener
         $("#cancel-btn").on("click", () => {
-            window.location.href = "index.html";
+            window.location.href = "viewCat.html";
         });
         
         // Form submission

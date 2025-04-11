@@ -103,33 +103,34 @@ public class GatewayController {
         }
     }
 
-    // Add a new cat - forward to the Cat Service
+    /// Add a new cat - forward to the Cat Service
     @PostMapping("/addCat")
     public ResponseEntity<String> addCat(@RequestParam String name,
-                                         @RequestParam String birthdate,
-                                         @RequestParam Integer breedId,
-                                         @RequestParam String funFact,
-                                         @RequestParam String description,
-                                         @RequestParam(required = false) Boolean isPurchased) {
+                                        @RequestParam String birthdate,
+                                        @RequestParam Integer breedId,
+                                        @RequestParam String funFact,
+                                        @RequestParam String description,
+                                        @RequestParam(required = false) Boolean isPurchased) {
         String url = "http://localhost:8082/addCat"; // Replace with the actual URL of the cat API
 
         // Constructing the request body based on new parameters
         String requestBody = "name=" + name + "&birthdate=" + birthdate +
-                             "&buyerId=" + 0 + "&breedId=" + breedId +
-                             "&funFact=" + funFact + "&description=" + description;
+                            "&buyerId=" + 0 + "&breedId=" + breedId +
+                            "&funFact=" + funFact + "&description=" + description;
 
         // Optionally add isPurchased to the request body if it's provided
         if (isPurchased != null) {
             requestBody += "&isPurchased=" + isPurchased;
         }
 
-        // Forward the request to the Cat Service
-        ResponseEntity<String> response = forwardRequest(url, HttpMethod.POST, requestBody, String.class);
+        try {
+            // Forward the request to the Cat Service
+            ResponseEntity<String> response = forwardRequest(url, HttpMethod.POST, requestBody, String.class);
 
-        if (response.getStatusCode() == HttpStatus.OK) {
-            return ResponseEntity.ok("Cat added successfully!");
-        } else {
-            return ResponseEntity.badRequest().body("Failed to add cat.");
+            // Return the actual response from the service
+            return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to add cat: " + e.getMessage());
         }
     }
 
