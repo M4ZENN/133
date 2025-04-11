@@ -35,6 +35,10 @@ public class GatewayController {
         this.restTemplate = restTemplate;
     }
 
+    public boolean isAdmin(HttpSession session) {
+        return (Boolean) session.getAttribute("isAdmin"); 
+    }
+
     // Reusable method to forward requests to external services (now generic)
     private <T> ResponseEntity<T> forwardRequest(String url, HttpMethod method, String requestBody,
             Class<T> responseType) {

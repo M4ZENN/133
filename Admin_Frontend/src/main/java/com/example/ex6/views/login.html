@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Purrfect Haven - Connexion</title>
     <link rel="stylesheet" href="../css/login.css">
+    <script src="../Javascripts/helpers/jquery-1.10.2.min.js"></script>
+    <script src="../Javascripts/services/servicesHttp.js"></script>
+    <script src="../Javascripts/controllers/loginCtrl.js"></script>
 </head>
 <body>
     <div class="paw-prints paw1">
@@ -41,10 +44,8 @@
                 <label for="password">Mot de passe</label>
                 <input type="password" id="password" required placeholder="••••••••">
             </div>
-            <button type="submit">Se connecter</button>
+            <button type="submit" id="login-btn">Se connecter</button>
         </form>
     </div>
-
-    <script src="script.js"></script>
 </body>
 </html>
