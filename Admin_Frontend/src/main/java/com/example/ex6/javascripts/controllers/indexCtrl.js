@@ -44,8 +44,8 @@ class IndexCtrl {
         catsListContainer.find(".cat-card:not(.template-card)").remove();
     
         data.forEach((cat) => {
-            const catCard = templateCatCard.clone()[0]; // Clone template card
-            $(catCard).removeClass("template-card");
+            const catCard = templateCatCard.clone();
+            catCard.removeClass("template-card").css("display", "block");
     
             // Calculate age from birthdate
             const birthDate = new Date(cat.birthdate);
@@ -64,7 +64,7 @@ class IndexCtrl {
             $(catCard).find(".cat-info .info-field p").eq(3).text(cat.description.trim());
     
             // Set image or fallback
-            const image = cat.image || "https://via.placeholder.com/200x150?text=No+Image";
+            const image = cat.image || "https://scalebranding.com/_next/image?url=https%3A%2F%2Fimages.scalebranding.com%2Fcat-and-fish-logo-bad17591-0047-4c46-a313-9781029fb316.jpg&w=256&q=75";
             $(catCard).find("img").attr("src", image).attr("alt", cat.name);
     
             // Set the cat ID to the data-id attributes of the buttons
@@ -80,7 +80,7 @@ class IndexCtrl {
             $(catCard).find(".delete-cat").on("click", (e) => {
                 const catId = $(e.currentTarget).attr("data-id");
                 if (confirm("Êtes-vous sûr de vouloir supprimer ce chat ?")) {
-                    this.http.deleteCat(catId, null, this.deleteCatSuccess, this.callbackError);
+                    this.http.deleteCat(catId, this.deleteCatSuccess, this.callbackError);
                 }
             });
             

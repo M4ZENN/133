@@ -81,7 +81,6 @@ public class CatController {
         return ResponseEntity.ok(response);
     }
 
-    // Handler to delete a cat
     @DeleteMapping(path = "/deleteCat")
     public ResponseEntity<Map<String, String>> deleteCat(@RequestParam Integer id) {
         String result = catService.deleteCat(id);

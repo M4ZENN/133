@@ -103,7 +103,7 @@ class AddCatCtrl {
     addCatSuccess(data) {
         console.log("Chat ajouté avec succès", data);
         alert("Chat ajouté avec succès!");
-        window.location.href = "index.html";
+        window.location.href = "viewCat.html";
     }
 
     callbackError(request, status, error) {
