@@ -50,7 +50,7 @@ public class GatewayController {
     // Login - forward login data to RESTAPP
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestParam String email, @RequestParam String password, HttpSession session) {
-        String url = "http://localhost:8081/login";
+        String url = "http://host.docker.internal:8081/login";
         String requestBody = "email=" + email + "&password=" + password;
 
         // Forward the login request and expect a UserDTO response
@@ -91,7 +91,7 @@ public class GatewayController {
     // Get all cats - forward to the Cat Service
     @GetMapping("/getCats")
     public ResponseEntity<String> getAllCats() {
-        String url = "http://localhost:8082/getCats"; // URL of the get all cats endpoint
+        String url = "http://host.docker.internal:8082/getCats"; // URL of the get all cats endpoint
 
         // Forward the GET request to the Cat Service
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
@@ -111,7 +111,7 @@ public class GatewayController {
                                         @RequestParam String funFact,
                                         @RequestParam String description,
                                         @RequestParam(required = false) Boolean isPurchased) {
-        String url = "http://localhost:8082/addCat"; // Replace with the actual URL of the cat API
+        String url = "http://host.docker.internal:8082/addCat"; // Replace with the actual URL of the cat API
 
         // Constructing the request body based on new parameters
         String requestBody = "name=" + name + "&birthdate=" + birthdate +
@@ -143,7 +143,7 @@ public class GatewayController {
                                                        @RequestParam Integer breedId,
                                                        @RequestParam String funFact,
                                                        @RequestParam String description) {
-        String url = "http://localhost:8082/updateCatInformation"; // URL of the update cat information endpoint
+        String url = "http://host.docker.internal:8082/updateCatInformation"; // URL of the update cat information endpoint
         String requestBody = "id=" + id + "&name=" + name + "&birthdate=" + birthdate +
                              "&buyerId=" + buyerId + "&breedId=" + breedId +
                              "&funFact=" + funFact + "&description=" + description;
@@ -162,7 +162,7 @@ public class GatewayController {
     @PutMapping("/updatePurchase")
     public ResponseEntity<String> updatePurchase(@RequestParam Integer id,
                                                  @RequestParam Integer buyerId) {
-        String url = "http://localhost:8082/updatePurshase"; // URL of the update purchase endpoint
+        String url = "http://host.docker.internal:8082/updatePurshase"; // URL of the update purchase endpoint
         String requestBody = "id=" + id + "&buyerId=" + buyerId;
 
         // Forward the request to the Cat Service
@@ -178,7 +178,7 @@ public class GatewayController {
     // Delete a cat - forward to the Cat Service
     @DeleteMapping("/deleteCat")
     public ResponseEntity<String> deleteCat(@RequestParam Integer id) {
-        String url = "http://localhost:8082/deleteCat"; // URL of the delete cat endpoint
+        String url = "http://host.docker.internal:8082/deleteCat"; // URL of the delete cat endpoint
         String requestBody = "id=" + id;
 
         // Forward the request to the Cat Service
@@ -194,7 +194,7 @@ public class GatewayController {
     // Get all breeds - forward to the Cat Service
     @GetMapping("/getBreeds")
     public ResponseEntity<String> getBreeds() {
-        String url = "http://localhost:8082/getBreeds"; // URL of the get all breeds endpoint
+        String url = "http://host.docker.internal:8082/getBreeds"; // URL of the get all breeds endpoint
 
         // Forward the GET request to the Cat Service
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
