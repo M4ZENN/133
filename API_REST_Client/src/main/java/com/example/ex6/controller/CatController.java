@@ -1,10 +1,17 @@
 package com.example.ex6.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.ex6.model.Breed;
 import com.example.ex6.model.Cat;
 import com.example.ex6.service.CatService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class CatController {
@@ -57,5 +64,10 @@ public class CatController {
     @DeleteMapping(path = "/deleteCat")
     public @ResponseBody String deleteCat(@RequestParam Integer id) {
         return catService.deleteCat(id);
+    }
+
+    @GetMapping("/getBreeds")
+    public @ResponseBody Iterable<Breed> getAllBreeds() {
+        return catService.findAllBreeds();
     }
 }

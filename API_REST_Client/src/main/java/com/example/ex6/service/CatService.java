@@ -1,16 +1,16 @@
 package com.example.ex6.service;
 
-import com.example.ex6.model.Breed;
-import com.example.ex6.model.Cat;
-import com.example.ex6.repository.CatRepository;
-import com.example.ex6.repository.BreedRepository;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.Optional;
+import com.example.ex6.model.Breed;
+import com.example.ex6.model.Cat;
+import com.example.ex6.repository.BreedRepository;
+import com.example.ex6.repository.CatRepository;
 
 @Service
 public class CatService {
@@ -119,5 +119,9 @@ public class CatService {
             return "Cat deleted successfully";
         }
         return "Cat not found";
+    }
+
+    public Iterable<Breed> findAllBreeds() {
+        return breedRepository.findAll();
     }
 }

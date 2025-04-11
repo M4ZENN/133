@@ -189,4 +189,19 @@ public class GatewayController {
             return ResponseEntity.badRequest().body("Failed to delete cat.");
         }
     }
+
+    // Get all breeds - forward to the Cat Service
+    @GetMapping("/getBreeds")
+    public ResponseEntity<String> getBreeds() {
+        String url = "http://localhost:8082/getAllBreeds"; // URL of the get all breeds endpoint
+
+        // Forward the GET request to the Cat Service
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return ResponseEntity.ok(response.getBody());
+        } else {
+            return ResponseEntity.badRequest().body("Failed to retrieve breeds.");
+        }
+    }
 }
