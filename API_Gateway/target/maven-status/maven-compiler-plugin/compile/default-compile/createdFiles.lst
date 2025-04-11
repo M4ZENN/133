@@ -1,3 +1,4 @@
 com\example\ex6\dto\UserDTO.class
 com\example\ex6\controller\GatewayController.class
+com\example\ex6\config\SimpleCORSFilter.class
 com\example\ex6\Ex6Application.class
