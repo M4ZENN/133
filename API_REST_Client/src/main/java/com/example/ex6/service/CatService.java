@@ -2,6 +2,8 @@ package com.example.ex6.service;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,19 +128,24 @@ public class CatService {
         return breedRepository.findAll();
     }
 
-    public CatDTO getCat(Integer id) {
-        Cat cat = catRepository.findById(id).orElse(null);
-        if (cat != null) {
-            return new CatDTO(
-                cat.getId(),
-                cat.getName(),
-                cat.getBirthdate(),
-                cat.getBreed() != null ? cat.getBreed().getName() : "Unknown",
-                cat.getFunFact(),
-                cat.getBuyer() != 0 ? "Buyer: " + cat.getBuyer() : "No buyer",
-                cat.getDescription()
-            );
-        }
-        return null; // Or handle appropriately if not found
+ public Map<String, String> getCat(Integer id) {
+    Map<String, String> catDetails = new HashMap<>();
+    Optional<Cat> cat = catRepository.findById(id);
+    
+    if (cat.isPresent()) {
+        Cat existingCat = cat.get();
+        catDetails.put("id", existingCat.getId().toString());
+        catDetails.put("name", existingCat.getName());
+        catDetails.put("birthdate", existingCat.getBirthdate().toString());
+        catDetails.put("breed", existingCat.getBreed() != null ? existingCat.getBreed().getName() : "Unknown");
+        catDetails.put("funFact", existingCat.getFunFact());
+        catDetails.put("description", existingCat.getDescription());
+        catDetails.put("isPurchased", existingCat.getIsPurchased() != null && existingCat.getIsPurchased() ? "Yes" : "No");
+        
+        return catDetails;
     }
+    
+    return null; // Return null if no cat is found
+}
+
 }

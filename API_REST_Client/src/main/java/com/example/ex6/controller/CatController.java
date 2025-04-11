@@ -35,6 +35,25 @@ public class CatController {
         return catService.findAllCats();
     }
 
+    @GetMapping("/getCat")
+    public ResponseEntity<Map<String, String>> getCat(@RequestParam Integer id) {
+        Map<String, String> response = new HashMap<>();
+        
+        if (id == null) {
+            response.put("message", "Invalid request. ID is required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+        
+        Map<String, String> catDetails = catService.getCat(id); // Fetching cat details
+        if (catDetails != null) {
+            return ResponseEntity.ok(catDetails); // Return cat details if found
+        } else {
+            response.put("message", "Cat not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response); // Return not found if cat doesn't exist
+        }
+    }
+    
+
     // Handler to add a new cat
     @PostMapping(path = "/addCat")
     public ResponseEntity<Map<String, String>> addNewCat(@RequestParam String name,
@@ -98,14 +117,5 @@ public class CatController {
     public Iterable<Breed> getAllBreeds() {
         return catService.findAllBreeds();
     }
-
-    @GetMapping("/getCat")
-    public ResponseEntity<CatDTO> getCat(@RequestParam Integer id) {
-        CatDTO catDTO = catService.getCat(id); // Service now returns CatDTO directly
-        if (catDTO != null) {
-            return ResponseEntity.ok(catDTO);
-        } else {
-            return ResponseEntity.badRequest().body(null); // Or provide a custom error message
-        }
-    }
+    
 }
