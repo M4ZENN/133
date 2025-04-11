@@ -43,9 +43,7 @@ function connectSuccess(data, text, jqXHR) {
     alert("User disconnected");
   
     // Clear session storage upon logout
-    localStorage.removeItem("adminEmail");
-    localStorage.removeItem("adminId");
-  
+    localStorage.clear();
     // Redirect to index.html after logout
     window.location.href = "login.html";
   }

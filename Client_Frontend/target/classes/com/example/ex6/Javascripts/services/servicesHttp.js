@@ -44,6 +44,9 @@ class servicesHttp {
         email: email,
         password: password
       },
+   /*   xhrFields: {
+        withCredentials: true // Include credentials in the request
+      },*/
       success: successCallback,
       error: errorCallback
     });
@@ -64,6 +67,4 @@ class servicesHttp {
       error: errorCallback
     });
   }
-
-
 }

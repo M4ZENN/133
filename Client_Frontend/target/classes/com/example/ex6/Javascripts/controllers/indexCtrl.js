@@ -3,6 +3,8 @@ class IndexCtrl {
         this.http = new servicesHttp();
         this.callbackError = this.callbackError.bind(this);
         this.getCatsSuccess = this.getCatsSuccess.bind(this);
+        this.handleBuy = this.handleBuy.bind(this);  // Bind handleBuy here
+
 
         this.init();
     }
@@ -22,7 +24,7 @@ class IndexCtrl {
         const catsListContainer = $("#cats-list");
         const templateCatCard = $(".cat-card.template-card");
     
-        data.forEach(function(cat) {
+        data.forEach((cat) => {  // Arrow function here
             const catCard = templateCatCard.clone()[0]; // Clone template card
             catCard.style.display = "block";
     
@@ -46,7 +48,14 @@ class IndexCtrl {
             const image = cat.image || "https://via.placeholder.com/200x150?text=No+Image";
             $(catCard).find("img").attr("src", image).attr("alt", cat.name);
     
-          
+            // BUY ACTION
+            const buyBtn = $(catCard).find(".btn-buy");
+            if (cat.buyerId) {
+                buyBtn.prop("disabled", true).text("Déjà acheté");
+            } else {
+                buyBtn.on("click", () => this.handleBuy(cat.id, catCard));  // Arrow function here
+            }
+    
             // Append to list
             catsListContainer.append(catCard);
         });
@@ -54,6 +63,26 @@ class IndexCtrl {
         console.log("Cats loaded and displayed successfully");
     }
     
+    
+
+  handleBuy(catId, catCard) {
+        const buyerId = localStorage.getItem("clientId");
+        if (!buyerId) {
+            alert("Vous devez être connecté pour acheter un chat.");
+            return;
+        }
+
+        this.http.buyCat(catId, buyerId,
+            () => {
+                $(catCard).find(".btn-buy").prop("disabled", true).text("Acheté !");
+                console.log(`Cat ${catId} purchased by ${buyerId}`);
+            },
+            (xhr, status, error) => {
+                console.error("Erreur lors de l'achat :", error);
+                alert("Erreur lors de l'achat du chat.");
+            }
+        );
+    }
 
     callbackError(request, status, error) {
         // Handle errors when loading cats
