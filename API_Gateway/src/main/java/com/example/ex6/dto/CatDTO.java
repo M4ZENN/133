@@ -9,7 +9,7 @@ public class CatDTO {
     private String birthdate;  // formatted as "yyyy-MM-dd"
     private String breedName;
     private String funFact;
-    private String buyer;  // Changed from `buyer` to a string representation
+    private String buyer;
     private String description;
 
     // Constructor that directly accepts Date and converts it
@@ -89,5 +89,14 @@ public class CatDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    // Optionally, add a method to parse a string date into a Date object, in case you need that later
+    public static Date parseDate(String dateStr) {
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
+        } catch (Exception e) {
+            return null; // or handle exception as needed
+        }
     }
 }

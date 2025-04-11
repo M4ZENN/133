@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.ex6.dto.CatDTO;
 import com.example.ex6.model.Breed;
 import com.example.ex6.model.Cat;
 import com.example.ex6.repository.BreedRepository;
@@ -125,7 +126,19 @@ public class CatService {
         return breedRepository.findAll();
     }
 
-    public Cat getCat(Integer id) {
-        return catRepository.findById(id).orElse(null);
+    public CatDTO getCat(Integer id) {
+        Cat cat = catRepository.findById(id).orElse(null);
+        if (cat != null) {
+            return new CatDTO(
+                cat.getId(),
+                cat.getName(),
+                cat.getBirthdate(),
+                cat.getBreed() != null ? cat.getBreed().getName() : "Unknown",
+                cat.getFunFact(),
+                cat.getBuyer() != 0 ? "Buyer: " + cat.getBuyer() : "No buyer",
+                cat.getDescription()
+            );
+        }
+        return null; // Or handle appropriately if not found
     }
 }

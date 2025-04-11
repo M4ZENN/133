@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.ex6.dto.CatDTO;
 import com.example.ex6.dto.UserDTO;
 
 import jakarta.servlet.http.HttpSession;
@@ -219,16 +220,18 @@ public class GatewayController {
     }
 
     @GetMapping("/getCat")
-    public ResponseEntity<String> getCat(@RequestParam Integer id) {
-        String url = "http://host.docker.internal:8082/getCat?id=" + id; // URL of the get all breeds endpoint
+    public ResponseEntity<CatDTO> getCat(@RequestParam Integer id) {
+        String url = "http://host.docker.internal:8082/getCat?id=" + id;
+        System.out.println("Received request for cat with ID: " + id);
 
         // Forward the GET request to the Cat Service
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
+        ResponseEntity<CatDTO> response = restTemplate.exchange(url, HttpMethod.GET, null, CatDTO.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
             return ResponseEntity.ok(response.getBody());
         } else {
-            return ResponseEntity.badRequest().body("Failed to retrieve cat");
+            return ResponseEntity.badRequest().body(null); // Or you can provide a custom error message
         }
     }
+    
 }
