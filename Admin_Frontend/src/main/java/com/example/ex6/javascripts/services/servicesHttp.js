@@ -1,6 +1,6 @@
 class servicesHttp {
     constructor() {
-        this.BASE_URL = "http://host.docker.internal:8083/";
+        this.BASE_URL = "http://localhost:8083/";
     }
     
     chargerCats(successCallback, errorCallback) {

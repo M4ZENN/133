@@ -62,7 +62,7 @@ class IndexCtrl {
             $(catCard).find(".cat-info .info-field p").eq(3).text(cat.description.trim());
     
             // Set image or fallback
-x
+
     
             // Set the cat ID to the data-id attributes of the buttons
             $(catCard).find(".modify-cat").attr("data-id", cat.id);

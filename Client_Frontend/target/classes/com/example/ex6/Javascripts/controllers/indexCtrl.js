@@ -8,7 +8,7 @@ class IndexCtrl {
     }
 
     init() {
-        // **Check if the user is logged in before loading the cats**
+        // *Check if the user is logged in before loading the cats*
         if (!localStorage.getItem("clientEmail") || !localStorage.getItem("clientId")) {
             window.location.href = "login.html"; // Redirect to login if not logged in
             return;
