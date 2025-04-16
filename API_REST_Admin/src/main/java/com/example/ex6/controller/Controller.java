@@ -66,27 +66,4 @@ public class Controller {
         session.setAttribute("visites", visites);
         return ResponseEntity.ok("Number of visits: " + visites);
     }
-
-    /* 
-    // Add a new user
-    @PostMapping("/add")
-    public ResponseEntity<String> addNewUser(
-            @RequestParam String firstName,
-            @RequestParam String lastName,
-            @RequestParam String birthDate,
-            @RequestParam String email,
-            @RequestParam String phoneNumber,
-            @RequestParam String password,
-            @RequestParam(defaultValue = "false") boolean isAdmin) {
-        return userService.addNewUser(firstName, lastName, birthDate, email, phoneNumber, password, isAdmin);
-    }
-    */
-
-    /*
-    // Get all users
-    @GetMapping("/all")
-    public ResponseEntity<Iterable<UserDTO>> getAllUsers() {
-        return ResponseEntity.ok(userService.findAllUsers());
-    }
-    */
 }
