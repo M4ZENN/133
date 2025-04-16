@@ -1,6 +1,8 @@
 package com.example.ex6.controller;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,7 @@ public class GatewayController {
     }
 
     public boolean isAdmin(HttpSession session) {
-        return (Boolean) session.getAttribute("isAdmin"); 
+        return (Boolean) session.getAttribute("isAdmin");
     }
 
     // Reusable method to forward requests to external services (now generic)
@@ -101,20 +103,18 @@ public class GatewayController {
 
     // Get all cats - forward to the Cat Service
     @GetMapping("/getCats")
-    public ResponseEntity<String> getAllCats() {
-        String url = "http://host.docker.internal:8082/getCats"; // URL of the get all cats endpoint
+    public ResponseEntity<List<CatDTO>> getAllCats() {
+        String url = "http://host.docker.internal:8082/getCats";
+        ResponseEntity<CatDTO[]> response = restTemplate.getForEntity(url, CatDTO[].class);
 
-        // Forward the GET request to the Cat Service
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
-
-        if (response.getStatusCode() == HttpStatus.OK) {
-            return ResponseEntity.ok(response.getBody());
+        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+            List<CatDTO> cats = Arrays.asList(response.getBody());
+            return ResponseEntity.ok(cats);
         } else {
-            return ResponseEntity.badRequest().body("Failed to retrieve cats.");
+            return ResponseEntity.status(response.getStatusCode()).build();
         }
     }
 
-    /// Add a new cat - forward to the Cat Service
     @PostMapping("/addCat")
     public ResponseEntity<String> addCat(@RequestParam String name,
             @RequestParam String birthdate,
@@ -122,30 +122,30 @@ public class GatewayController {
             @RequestParam String funFact,
             @RequestParam String description,
             @RequestParam(required = false) Boolean isPurchased) {
-        String url = "http://host.docker.internal:8082/addCat"; // Replace with the actual URL of the cat API
+        String url = "http://host.docker.internal:8082/addCat";
 
-        // Constructing the request body based on new parameters
         String requestBody = "name=" + name + "&birthdate=" + birthdate +
-                "&buyerId=" + 0 + "&breedId=" + breedId +
+                "&buyerId=0" + "&breedId=" + breedId +
                 "&funFact=" + funFact + "&description=" + description;
 
-        // Optionally add isPurchased to the request body if it's provided
         if (isPurchased != null) {
             requestBody += "&isPurchased=" + isPurchased;
         }
 
         try {
-            // Forward the request to the Cat Service
-            ResponseEntity<String> response = forwardRequest(url, HttpMethod.POST, requestBody, String.class);
+            ResponseEntity<CatDTO> response = forwardRequest(url, HttpMethod.POST, requestBody, CatDTO.class);
+            CatDTO cat = response.getBody();
+            if (cat != null) {
+                System.out.println("Cat added: " + cat.getName() + " (" + cat.getId() + ")");
+            }
 
-            // Return the actual response from the service
-            return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
+            return ResponseEntity.status(response.getStatusCode())
+                    .body("Cat added successfully!");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to add cat: " + e.getMessage());
         }
     }
 
-    // Update cat information - forward to the Cat Service
     @PutMapping("/updateCatInformation")
     public ResponseEntity<String> updateCatInformation(@RequestParam Integer id,
             @RequestParam String name,
@@ -154,43 +154,45 @@ public class GatewayController {
             @RequestParam Integer breedId,
             @RequestParam String funFact,
             @RequestParam String description) {
-        String url = "http://host.docker.internal:8082/updateCatInformation"; // URL of the update cat information
-                                                                              // endpoint
+        String url = "http://host.docker.internal:8082/updateCatInformation";
+
         String requestBody = "id=" + id + "&name=" + name + "&birthdate=" + birthdate +
                 "&buyerId=" + buyerId + "&breedId=" + breedId +
                 "&funFact=" + funFact + "&description=" + description;
 
-        // Forward the request to the Cat Service
-        ResponseEntity<String> response = forwardRequest(url, HttpMethod.PUT, requestBody, String.class);
+        try {
+            ResponseEntity<CatDTO> response = forwardRequest(url, HttpMethod.PUT, requestBody, CatDTO.class);
+            CatDTO cat = response.getBody();
+            if (cat != null) {
+                System.out.println("Cat updated: " + cat.getName() + " (ID: " + cat.getId() + ")");
+            }
 
-        if (response.getStatusCode() == HttpStatus.OK) {
             return ResponseEntity.ok("Cat information updated successfully!");
-        } else {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to update cat information.");
         }
     }
 
-    // Update purchase status - forward to the Cat Service
     @PutMapping("/updatePurchase")
     public ResponseEntity<Map<String, String>> updatePurchase(@RequestParam Integer id,
             @RequestParam Integer buyerId) {
-        String url = "http://host.docker.internal:8082/updatePurshase"; // URL of the update purchase endpoint
+        String url = "http://host.docker.internal:8082/updatePurshase";
         String requestBody = "id=" + id + "&buyerId=" + buyerId;
-
-        // Forward the request to the Cat Service
-        ResponseEntity<String> response = forwardRequest(url, HttpMethod.PUT, requestBody, String.class);
 
         Map<String, String> responseBody = new HashMap<>();
 
-        if (response.getStatusCode() == HttpStatus.OK) {
+        try {
+            ResponseEntity<CatDTO> response = forwardRequest(url, HttpMethod.PUT, requestBody, CatDTO.class);
+            CatDTO cat = response.getBody();
+            if (cat != null) {
+                System.out.println("Cat marked as purchased: " + cat.getName());
+            }
+
             responseBody.put("message", "Cat purchased successfully!");
-            return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(responseBody);
-        } else {
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(responseBody);
+        } catch (Exception e) {
             responseBody.put("message", "Failed to update cat purchase.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .contentType(MediaType.APPLICATION_JSON)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON)
                     .body(responseBody);
         }
     }
@@ -198,11 +200,13 @@ public class GatewayController {
     @DeleteMapping(path = "/deleteCat")
     public ResponseEntity<Map<String, String>> deleteCat(@RequestParam Integer id) {
         String url = "http://host.docker.internal:8082/deleteCat?id=" + id;
+
         ResponseEntity<String> response = forwardRequest(url, HttpMethod.DELETE, null, String.class);
 
         Map<String, String> responseBody = new HashMap<>();
 
         if (response.getStatusCode() == HttpStatus.OK) {
+            System.out.println("Cat with ID " + id + " deleted.");
             responseBody.put("message", "Cat deleted successfully!");
             return ResponseEntity.ok(responseBody);
         } else {
@@ -240,5 +244,5 @@ public class GatewayController {
             return ResponseEntity.badRequest().body(null); // Or you can provide a custom error message
         }
     }
-    
+
 }
