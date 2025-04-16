@@ -1,51 +1,48 @@
 class IndexCtrl {
     constructor() {
-        this.http = new servicesHttp();
+        this.http = new servicesHttp(); // Instance du service HTTP
         this.callbackError = this.callbackError.bind(this);
         this.getCatsSuccess = this.getCatsSuccess.bind(this);
         this.deleteCatSuccess = this.deleteCatSuccess.bind(this);
-        
-        this.init();
-        this.setupEventListeners();
+
+        this.init(); // Chargement initial
+        this.setupEventListeners(); // Définition des événements
     }
 
+    // Charge la liste des chats au démarrage de la page
     init() {
-        // Fetch and display the cats when the page loads
         this.http.chargerCats(this.getCatsSuccess, this.callbackError);
     }
 
+    // Configure les événements pour les boutons d’ajout et de déconnexion
     setupEventListeners() {
-        // Add cat button event listener
+        // Bouton d’ajout d’un chat
         $("#add-cat-btn").on("click", () => {
             window.location.href = "addCat.html";
         });
 
-        // Logout button event listener
+        // Bouton de déconnexion
         $("#logout-btn").on("click", () => {
-            // Could implement actual logout request here
-            // this.http.logout(this.logoutSuccess, this.callbackError);
-            window.location.href = "login.html"; // Redirect to login page
+            // Redirige vers la page de login
+            window.location.href = "login.html";
         });
     }
 
-    /**
-     * Success callback for loading the list of cats from the server.
-     * @param {Object} data - The raw data returned from the server.
-     */
+    // Callback en cas de succès du chargement des chats
     getCatsSuccess(data) {
         console.log("getCatsSuccess called", data);
-    
+
         const catsListContainer = $("#cats-list");
         const templateCatCard = $(".cat-card.template-card");
-        
-        // Clear existing cats (except the template)
+
+        // Supprime les anciennes cartes (sauf le modèle)
         catsListContainer.find(".cat-card:not(.template-card)").remove();
-    
+
         data.forEach((cat) => {
             const catCard = templateCatCard.clone();
             catCard.removeClass("template-card").css("display", "block");
-    
-            // Calculate age from birthdate
+
+            // Calcule l'âge du chat
             const birthDate = new Date(cat.birthdate);
             const today = new Date();
             let age = today.getFullYear() - birthDate.getFullYear();
@@ -53,58 +50,57 @@ class IndexCtrl {
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
                 age--;
             }
-    
-            // Fill in cat data
+
+            // Remplit les données du chat dans la carte
             $(catCard).find(".cat-header").text(cat.name);
             $(catCard).find(".cat-info .info-field p").eq(0).text(`${age} ans`);
             $(catCard).find(".cat-info .info-field p").eq(1).text(cat.breed.name.trim());
             $(catCard).find(".cat-info .info-field p").eq(2).text(cat.funFact);
             $(catCard).find(".cat-info .info-field p").eq(3).text(cat.description.trim());
-    
-            // Set image or fallback
 
-    
-            // Set the cat ID to the data-id attributes of the buttons
+            // Définition des attributs data-id pour les boutons
             $(catCard).find(".modify-cat").attr("data-id", cat.id);
             $(catCard).find(".delete-cat").attr("data-id", cat.id);
-            
-            // Add click handlers for the modify and delete buttons
+
+            // Bouton modifier : redirige vers la page de modification
             $(catCard).find(".modify-cat").on("click", (e) => {
                 const catId = $(e.currentTarget).attr("data-id");
                 window.location.href = `modifyCat.html?id=${catId}`;
             });
-            
+
+            // Bouton supprimer : demande confirmation puis supprime le chat
             $(catCard).find(".delete-cat").on("click", (e) => {
                 const catId = $(e.currentTarget).attr("data-id");
                 if (confirm("Êtes-vous sûr de vouloir supprimer ce chat ?")) {
                     this.http.deleteCat(catId, this.deleteCatSuccess, this.callbackError);
                 }
             });
-            
-            // Append to list
+
+            // Ajoute la carte du chat dans le DOM
             catsListContainer.append(catCard);
         });
-    
-        console.log("Cats loaded and displayed successfully");
+
+        console.log("Chats chargés et affichés avec succès");
     }
-    
+
+    // Callback après suppression d’un chat
     deleteCatSuccess(data) {
-        console.log("Cat deleted successfully", data);
-        // If your response now has a message property, you might want to show it
+        console.log("Chat supprimé avec succès", data);
         if (data && data.message) {
             alert(data.message);
         }
-        // Refresh the cats list
+        // Recharge la liste des chats
         this.http.chargerCats(this.getCatsSuccess, this.callbackError);
     }
 
+    // Callback d’erreur pour toute requête échouée
     callbackError(request, status, error) {
-        // Handle errors when loading cats
-        console.error("Error: " + error);
-        alert("Error: " + error);
+        console.error("Erreur : " + error);
+        alert("Erreur : " + error);
     }
 }
 
+// Démarrage du contrôleur quand la page est prête
 $(document).ready(function () {
     window.ctrl = new IndexCtrl();
 });

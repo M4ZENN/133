@@ -1,7 +1,6 @@
-
 class loginCtrl {
     constructor() {
-        this.http = new servicesHttp();  // Assuming servicesHttp is already implemented
+        this.http = new servicesHttp(); // Instance du service HTTP
         this.callbackError = this.callbackError.bind(this);
         this.connectSuccess = this.connectSuccess.bind(this);
         this.disconnectSuccess = this.disconnectSuccess.bind(this);
@@ -9,52 +8,42 @@ class loginCtrl {
         this.setupEventListeners();
     }
 
-    /**
-     * Sets up event listeners for login and logout buttons.
-     */
+    // Initialise les écouteurs pour les boutons de connexion et déconnexion
     setupEventListeners() {
         const butConnect = $("#login-btn");
         const butDisconnect = $("#logout-btn");
 
-        // Handle login button click
+        // Gestion du clic sur le bouton de connexion
         butConnect.click((event) => {
-            event.preventDefault(); // Prevent form submission
+            event.preventDefault(); // Empêche la soumission du formulaire
 
             const email = $("#email").val();
             const password = $("#password").val();
             console.log("Sending email:", email, "and password:", password);
 
-            // Call the connect method via the service
+            // Appel à l'API de connexion
             this.http.connect(email, password, this.connectSuccess, this.callbackError);
         });
 
-        // Handle logout button click
+        // Gestion du clic sur le bouton de déconnexion
         butDisconnect.click((event) => {
-            // Call the disconnect method via the service
             this.http.disconnect(this.disconnectSuccess, this.callbackError);
         });
     }
 
-    /**
-     * Success callback for handling successful login.
-     * It processes the data returned from the server.
-     *
-     * @param {Object} data - Data returned from the server, expected to contain user info.
-     * @param {string} text - Status text from the server (not used here).
-     * @param {Object} jqXHR - jQuery XMLHttpRequest object (not used here).
-     */
+    // Callback appelé en cas de connexion réussie
     connectSuccess(data, text, jqXHR) {
         console.log("Login response:", data);
 
         const user = data.user;
 
         if (user && user.isAdmin === true) {
-            // Store client credentials in localStorage
+            // Stockage des infos de l’utilisateur dans le localStorage
             localStorage.setItem("clientEmail", user.email);
             localStorage.setItem("clientId", user.id);
 
             alert("Connexion réussie !");
-            window.location.href = "viewCat.html";
+            window.location.href = "viewCat.html"; // Redirection après connexion
         } else if (user && user.isAdmin === false) {
             alert("Seuls les administrateur peuvent accéder à cette page.");
         } else {
@@ -62,36 +51,21 @@ class loginCtrl {
         }
     }
 
-    /**
-     * Success callback for handling successful logout.
-     * It clears session storage and redirects the user to the login page.
-     *
-     * @param {Object} data - Data returned from the server (not used here).
-     * @param {string} text - Status text from the server (not used here).
-     * @param {Object} jqXHR - jQuery XMLHttpRequest object (not used here).
-     */
+    // Callback appelé en cas de déconnexion réussie
     disconnectSuccess(data, text, jqXHR) {
-        alert("User disconnected"); 
-        // Clear localStorage upon logout
-        localStorage.clear();
-        // Redirect to login page
-        window.location.href = "login.html";
+        alert("Utilisateur déconnecté");
+        localStorage.clear(); // Suppression des données locales
+        window.location.href = "login.html"; // Redirection vers la page de login
     }
 
-    /**
-     * Error callback for handling errors during login or logout.
-     * It logs the error and shows an alert with the error message.
-     *
-     * @param {Object} request - The jqXHR object containing the response.
-     * @param {string} status - The status of the request.
-     * @param {string} error - The error message returned from the server.
-     */
+    // Callback générique en cas d’erreur de requête (connexion ou déconnexion)
     callbackError(request, status, error) {
         console.log("Error login:", error);
-        alert("Error login: " + error);
+        alert("Erreur de connexion : " + error);
     }
 }
 
+// Instanciation du contrôleur une fois le DOM chargé
 $(document).ready(function () {
     window.ctrl = new loginCtrl();
 });
