@@ -1,76 +1,63 @@
 class servicesHttp {
   constructor() {
-      this.BASE_URL = "http://localhost:8083/";
+    this.BASE_URL = "http://localhost:8083/"; // URL de base pour les requêtes
   }
 
+  // Charge la liste des chats depuis l'API.
   chargerCats(successCallback, errorCallback) {
-      $.ajax({
-          type: "GET",
-          dataType: "json",
-          url: this.BASE_URL + "gateway/getCats",
-          success: successCallback,
-          error: errorCallback
-      });
+    $.ajax({
+      type: "GET",
+      dataType: "json",
+      url: this.BASE_URL + "gateway/getCats",
+      success: successCallback,
+      error: errorCallback,
+    });
   }
 
+  // Met à jour l'achat d'un chat via l'API.
   buyCat(catId, buyerId, successCallback, errorCallback) {
     $.ajax({
-        type: "PUT",
-        dataType: "json",
-        url: this.BASE_URL + "gateway/updatePurchase",
-        data: {
-            id: catId,
-            buyerId: buyerId
-        },
-        success: successCallback,
-        error: errorCallback
+      type: "PUT",
+      dataType: "json",
+      url: this.BASE_URL + "gateway/updatePurchase",
+      data: {
+        id: catId,
+        buyerId: buyerId,
+      },
+      success: successCallback,
+      error: errorCallback,
     });
-}
+  }
 
-/**
- * Authenticate a user with email and password.
- * @param {string} email - User's email address.
- * @param {string} password - User's password.
- * @param {function} successCallback - Called on success.
- * @param {function} errorCallback - Called on error.
- */
- connect(email, password, successCallback, errorCallback) {
+  // Connecte un utilisateur avec son email et mot de passe (sans commentaire sur chaque ligne).
+  connect(email, password, successCallback, errorCallback) {
     $.ajax({
       type: "POST",
       dataType: "json",
       url: this.BASE_URL + "gateway/login",
       data: {
-        action: 'connect',
+        action: "connect",
         email: email,
-        password: password
+        password: password,
       },
-   /*   xhrFields: {
-        withCredentials: true // Include credentials in the request
-      },*/
       success: successCallback,
-      error: errorCallback
+      error: errorCallback,
     });
   }
-  
-  /**
-   * Disconnect the user.
-   * @param {function} successCallback - Called on success.
-   * @param {function} errorCallback - Called on error.
-   */
+
+  // Déconnecte un utilisateur et nettoie la session.
   disconnect(successCallback, errorCallback) {
     $.ajax({
-        type: "POST",
-        dataType: "json",
-        url: this.BASE_URL + "gateway/logout",
-        data: 'action=disconnect',
-        success: (data) => {
-            successCallback(data);
-            // Clear session storage and redirect to login.html
-            localStorage.clear();  // Clear client credentials
-            window.location.href = "login.html";  // Redirect to login
-        },
-        error: errorCallback
+      type: "POST",
+      dataType: "json",
+      url: this.BASE_URL + "gateway/logout",
+      data: "action=disconnect",
+      success: (data) => {
+        successCallback(data);
+        localStorage.clear(); // Clear client credentials
+        window.location.href = "login.html"; // Redirect to login
+      },
+      error: errorCallback,
     });
-}
-
+  }
 }

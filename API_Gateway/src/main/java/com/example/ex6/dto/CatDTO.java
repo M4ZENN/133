@@ -90,13 +90,4 @@ public class CatDTO {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    // Optionally, add a method to parse a string date into a Date object, in case you need that later
-    public static Date parseDate(String dateStr) {
-        try {
-            return new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
-        } catch (Exception e) {
-            return null; // or handle exception as needed
-        }
-    }
 }
