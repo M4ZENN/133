@@ -57,11 +57,19 @@ class IndexCtrl {
             $(catCard).find(".cat-info .info-field p").eq(1).text(cat.breed.name.trim());
             $(catCard).find(".cat-info .info-field p").eq(2).text(cat.funFact);
             $(catCard).find(".cat-info .info-field p").eq(3).text(cat.description.trim());
+<<<<<<< HEAD:Admin_Frontend/target/classes/com/example/ex6/javascripts/controllers/indexCtrl.js
+    
+            // Set image or fallback
+x
+    
+            // Set the cat ID to the data-id attributes of the buttons
+=======
 
             const image = cat.image || "https://coin-images.coingecko.com/coins/images/52603/large/OIALogo.jpg?1733756422"
             $(catCard).find("img").attr("src", image).attr("alt", cat.name);
 
             // Définition des attributs data-id pour les boutons
+>>>>>>> f2ea6d69c206e6a8ffaaee58ff6c61fcafdc1f3e:Admin_Frontend/src/javascripts/controllers/indexCtrl.js
             $(catCard).find(".modify-cat").attr("data-id", cat.id);
             $(catCard).find(".delete-cat").attr("data-id", cat.id);
 
