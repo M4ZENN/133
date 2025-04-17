@@ -169,6 +169,7 @@ public class GatewayController {
             @RequestParam Integer buyerId) {
         String url = "http://host.docker.internal:8082/updatePurshase";
         String requestBody = "id=" + id + "&buyerId=" + buyerId;
+        System.out.println(buyerId);
 
         Map<String, String> responseBody = new HashMap<>();
 

@@ -100,11 +100,14 @@ public class CatService {
     }
 
     // ✅ Marque un chat comme acheté
+
     public String purchaseCat(Integer id, Integer buyerId) {
+System.out.println("ID du chat : " + id + ", ID de l'acheteur : " + buyerId); // ✅ Affiche les IDs pour le débogage
         Optional<Cat> cat = catRepository.findById(id);
         if (cat.isPresent()) {
             Cat existingCat = cat.get();
             existingCat.setIsPurchased(true); // ✅ Le chat est marqué comme acheté
+            existingCat.setBuyerFk(buyerId);
             catRepository.save(existingCat);
             return "Chat acheté avec succès";
         }
