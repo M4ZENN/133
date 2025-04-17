@@ -1,5 +1,5 @@
-M:\EMF\133\133\API_Gateway\src\main\java\com\example\ex6\Ex6Application.java
-M:\EMF\133\133\API_Gateway\src\main\java\com\example\ex6\controller\GatewayController.java
-M:\EMF\133\133\API_Gateway\src\main\java\com\example\ex6\config\SimpleCORSFilter.java
-M:\EMF\133\133\API_Gateway\src\main\java\com\example\ex6\dto\CatDTO.java
-M:\EMF\133\133\API_Gateway\src\main\java\com\example\ex6\dto\UserDTO.java
+M:\EMF\133_project\133\API_Gateway\src\main\java\com\example\ex6\dto\CatDTO.java
+M:\EMF\133_project\133\API_Gateway\src\main\java\com\example\ex6\Application.java
+M:\EMF\133_project\133\API_Gateway\src\main\java\com\example\ex6\config\CorsConfig.java
+M:\EMF\133_project\133\API_Gateway\src\main\java\com\example\ex6\dto\UserDTO.java
+M:\EMF\133_project\133\API_Gateway\src\main\java\com\example\ex6\controller\GatewayController.java

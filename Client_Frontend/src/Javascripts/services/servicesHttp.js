@@ -40,7 +40,9 @@ class servicesHttp {
         email: email,
         password: password,
       },
-  
+      xhrFields: {
+        withCredentials: true,
+      },
       success: successCallback,
       error: errorCallback,
     });
