@@ -58,6 +58,9 @@ class IndexCtrl {
             $(catCard).find(".cat-info .info-field p").eq(2).text(cat.funFact);
             $(catCard).find(".cat-info .info-field p").eq(3).text(cat.description.trim());
 
+            const image = cat.image || "https://coin-images.coingecko.com/coins/images/52603/large/OIALogo.jpg?1733756422"
+            $(catCard).find("img").attr("src", image).attr("alt", cat.name);
+
             // Définition des attributs data-id pour les boutons
             $(catCard).find(".modify-cat").attr("data-id", cat.id);
             $(catCard).find(".delete-cat").attr("data-id", cat.id);
